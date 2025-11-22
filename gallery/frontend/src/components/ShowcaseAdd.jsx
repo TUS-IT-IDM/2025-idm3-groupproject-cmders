@@ -13,23 +13,21 @@ const ShowcaseAdd = () => {
     const [description, setDescription] = useState('');
     const [start, setStartDate] = useState('');
     const [end, setEndDate] = useState('');
-    const [heroImage, setHeroImage] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-
         if (file) {
             const reader = new FileReader();
-
             reader.onloadend = () => {
-                const filePath = `/uploads/${file.name}`;
                 setImagePreview(reader.result);
-                setHeroImage(filePath);
             };
-
             reader.readAsDataURL(file);
+
+            setSelectedFile(file);
         } else {
             setImagePreview(null);
+            setSelectedFile(null);
         }
     };
 
@@ -41,13 +39,12 @@ const ShowcaseAdd = () => {
             theme,
             description,
             start,
-            end,
-            heroImage
+            end
         }
 
-        ShowcaseService.create(showcase).then(response => {
-            console.log(response.data);
-        });
+        ShowcaseService.create(showcase, selectedFile)
+            .then(response => console.log(response.data))
+            .catch(error => console.error(error));
     }
 
     useEffect(() => {

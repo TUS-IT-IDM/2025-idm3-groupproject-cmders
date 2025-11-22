@@ -21,16 +21,17 @@ class ShowcaseService {
         });
     }
 
-    create(showcase) {
-        return axios.post('http://localhost:8080/api/showcases',
-            showcase,
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                withCredentials: true
-            }
-        );
+    create(showcase, file) {
+        const formData = new FormData();
+        formData.append('showcase', new Blob([JSON.stringify(showcase)], { type: 'application/json' }));
+        formData.append('file', file);
+
+        return axios.post('http://localhost:8080/api/showcases', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            withCredentials: true
+        });
     }
 }
 

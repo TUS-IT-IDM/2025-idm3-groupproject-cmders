@@ -1,5 +1,6 @@
 package idm3.project.gallery.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,10 +26,12 @@ public class Showcase {
     private Theme theme;
 
     @NotNull(message = "Please select a start time")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @Column(name = "start")
     private LocalDateTime start;
 
     @NotNull(message = "Please select an end time")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @Column(name = "end")
     private LocalDateTime end;
 

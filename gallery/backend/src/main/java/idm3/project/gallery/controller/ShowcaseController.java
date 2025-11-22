@@ -5,7 +5,9 @@ import idm3.project.gallery.service.ShowcaseService;
 import idm3.project.gallery.service.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -24,8 +26,8 @@ public class ShowcaseController {
     }
 
     @PostMapping
-    public void saveShowcase(@RequestBody Showcase showcase) {
-        showcaseService.saveShowcase(showcase);
+    public void saveShowcase(@RequestPart("showcase") Showcase showcase, @RequestPart("file") MultipartFile file) throws IOException {
+        showcaseService.saveShowcase(showcase, file);
     }
 
     @GetMapping({"/{id}"})
