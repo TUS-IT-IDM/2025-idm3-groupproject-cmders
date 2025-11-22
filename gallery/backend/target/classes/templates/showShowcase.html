@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Showcase Details</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${showcase.title}"></h1>
+    <h3 th:text="${showcase.theme.name}"></h3>
+    <br/>
+    <h2>Showcase Details</h2>
+    <p th:text="${showcase.description}"></p>
+    <img th:src="@{'/assets/images/showcases/' + ${showcase.heroImage}}" alt="Thumbnail" style="width: 500px; height: 500px;">
+    <p th:text="${#temporals.format(showcase.start, 'yyyy-MM-dd HH:mm')}">Start</p>
+    <p th:text="${#temporals.format(showcase.end,   'yyyy-MM-dd HH:mm')}">End</p>
+    <p th:text="${showcase.status}">Status</p>
+    <br/>
+    <h2>Projects</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Created by</th>
+            <th>Thumbnail</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="showcaseProject : ${showcaseProjects}">
+            <td th:text="${showcaseProject.project.title}"></td>
+            <td th:text="${showcaseProject.project.description}"></td>
+            <td th:text="${showcaseProject.project.user.firstName} + ' ' + ${showcaseProject.project.user.lastName}"></td>
+            <td><img th:src="@{'/assets/images/projects/thumbnail/thumb_' + ${showcaseProject.project.heroImage}}" alt="Thumbnail" style="width: 100px; height: 100px;"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

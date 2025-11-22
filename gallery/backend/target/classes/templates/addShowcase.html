@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Showcase</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+<form th:action="@{/MainGallery/submitNewShowcase}" th:object="${newShowcase}" method="post" enctype="multipart/form-data">
+    <div th:if="${#fields.hasGlobalErrors()}" style="color: red">
+        <ul>
+            <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
+        </ul>
+    </div>
+
+    <div class="form-group">
+        <label for="title">Title: </label>
+        <input type="text" id="title" th:field="*{title}" placeholder="Enter showcase title" required />
+        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red"></span>
+    </div>
+    <div class="form-group">
+        <label for="theme">Theme: </label>
+        <select id="theme" th:field="*{theme}" required>
+            <option value="" disabled selected>Choose a theme</option>
+            <option th:each="theme : ${themes}"
+                    th:value="${theme.id}"
+                    th:text="${theme.name}">
+            </option>
+        </select>
+        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red"></span>
+    </div>
+    <div class="form-group">
+        <label for="description">Description: </label>
+        <input type="text" id="description" th:field="*{description}" placeholder="Enter description" required />
+        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red"></span>
+    </div>
+    <div class="form-group">
+        <label for="start">Start: </label>
+        <input type="datetime-local" id="start" th:field="*{start}" placeholder="Enter start time" required />
+        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red"></span>
+    </div>
+    <div class="form-group">
+        <label for="end">End: </label>
+        <input type="datetime-local" id="end" th:field="*{end}" placeholder="Enter end time" required />
+        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red"></span>
+    </div>
+    <div class="form-group">
+        <label for="status">Status: </label>
+        <select id="status" th:field="*{status}" required>
+            <option value="Active">Active</option>
+            <option value="Inactive" selected>Inactive</option>
+        </select>
+        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red"></span>
+    </div>
+    <input type="hidden" th:field="*{heroImage}" />
+    <div class="form-group">
+        <label for="hero_image">Hero Image: </label>
+        <input type="file" id="hero_image" name="hero_image" required />
+        <span th:if="${#fields.hasErrors('heroImage')}" th:errors="*{heroImage}" style="color: red"></span>
+    </div>
+    <div class="form-group">
+        <button type="submit">Add Showcase</button>
+    </div>
+</form>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | Student</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+    <h1>Welcome to your dashboard, <span th:text="${user.firstName} + ' ' + ${user.lastName} + '!'">[First Name]</span></h1>
+    <a th:href="@{/MainGallery/profile}">Profile</a>
+    <h2>Showcases</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Theme</th>
+            <th>Start</th>
+            <th>End</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="showcase : ${showcases}">
+            <td th:text="${showcase.title}"></td>
+            <td th:text="${#temporals.format(showcase.start, 'yyyy-MM-dd HH:mm')}">Start</td>
+            <td th:text="${#temporals.format(showcase.end,   'yyyy-MM-dd HH:mm')}">End</td>
+            <td th:text="${showcase.end}"></td>
+            <td>
+                <div class="product-actions">
+                    <form th:action="@{/MainGallery/deleteShowcase}" method="post" onsubmit="confirmDelete(event)">
+                        <input type="hidden" th:name="id" th:value="${showcase.id}" />
+                        <button type="submit">Delete</button>
+                    </form>
+                    <button>
+                        <a th:href="@{/MainGallery/editShowcase/{id}(id = ${showcase.id})}" class="edit-button">
+                            Edit
+                        </a>
+                    </button>
+                    <button>
+                        <a th:href="@{/MainGallery/showShowcase/{id}(id = ${showcase.id})}" class="edit-button">
+                            View
+                        </a>
+                    </button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</body>
+</html>
