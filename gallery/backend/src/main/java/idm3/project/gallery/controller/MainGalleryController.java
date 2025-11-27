@@ -290,7 +290,7 @@ public class MainGalleryController {
             ModelAndView modelAndView = new ModelAndView("/showShowcase");
             modelAndView.addObject("showcase" , showcaseService.findOne(id).get());
             modelAndView.addObject("themes"   , themeService.findAll());
-            modelAndView.addObject("showcaseProjects", showcaseService.getShowcaseProjects(id));
+            modelAndView.addObject("showcaseProjects", showcaseService.getProjects(id));
             modelAndView.addObject("projects" , projectService.findAll());
             modelAndView.addObject("user", userService.findAll());
             return modelAndView;
