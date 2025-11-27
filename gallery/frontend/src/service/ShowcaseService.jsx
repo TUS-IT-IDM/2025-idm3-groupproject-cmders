@@ -13,7 +13,16 @@ class ShowcaseService {
     }
 
     get(id) {
-        return axios.get(`${API}/${id}`, {
+        return axios.get(`http://localhost:8080/api/showcases/${id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        });
+    }
+
+    getProjects(id) {
+        return axios.get(`http://localhost:8080/api/showcases/${id}/projects`, {
             headers: {
                 'Content-Type': 'application/json'
             },

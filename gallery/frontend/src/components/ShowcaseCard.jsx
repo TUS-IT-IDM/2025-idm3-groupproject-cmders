@@ -21,7 +21,7 @@ const ShowcaseCard = ({ showcase }) => {
                 <br/>
                 <p>{formatDate(showcase.start)} - {formatDate(showcase.end)}</p>
                 <p>{showcase.status}</p>
-                <Link to="/showcase/:id">
+                <Link to={"/showcase/" + showcase.id}>
                     <Button
                         appearance="primary"
                         href={"/showcase/" + showcase.id}
