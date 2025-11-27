@@ -1,6 +1,7 @@
 package idm3.project.gallery.controller;
 
 import idm3.project.gallery.model.Showcase;
+import idm3.project.gallery.model.ShowcaseProject;
 import idm3.project.gallery.service.ShowcaseService;
 import idm3.project.gallery.service.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +22,22 @@ public class ShowcaseController {
     }
 
     @GetMapping
-    public List<Showcase> getAllShowcases() {
+    public List<Showcase> getAll() {
         return showcaseService.findAll();
+    }
+
+    @GetMapping({"/{id}"})
+    public Showcase get(@PathVariable("id") Integer id) {
+        return showcaseService.findOne(id).get();
+    }
+
+    @GetMapping("/{id}/projects")
+    public List<ShowcaseProject> getProjects(@PathVariable("id") Integer id) {
+        return showcaseService.getProjects(id);
     }
 
     @PostMapping
     public void saveShowcase(@RequestPart("showcase") Showcase showcase, @RequestPart("file") MultipartFile file) throws IOException {
         showcaseService.saveShowcase(showcase, file);
-    }
-
-    @GetMapping({"/{id}"})
-    public Showcase getShowcase(@PathVariable("id") Integer id) {
-        return showcaseService.findOne(id).get();
     }
 }

@@ -21,7 +21,7 @@ public class File {
     @Column(name = "file_path")
     private String filePath;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "project", nullable = false)
     private Project project;
 

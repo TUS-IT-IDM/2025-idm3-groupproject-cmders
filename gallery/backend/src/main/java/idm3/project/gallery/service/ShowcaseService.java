@@ -28,8 +28,8 @@ public class ShowcaseService {
         return showcaseRepository.findAll();
     }
 
-    public List<ShowcaseProject> getShowcaseProjects(Integer showcaseId) {
-        return showcaseProjectRepository.findByShowcaseId(showcaseId);
+    public List<ShowcaseProject> getProjects(Integer showcaseId) {
+        return showcaseProjectRepository.findByShowcase_Id(showcaseId);
     }
 
     public Optional<Showcase> findOne(Integer showcase) {

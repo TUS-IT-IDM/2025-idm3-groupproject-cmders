@@ -13,13 +13,12 @@ public class ShowcaseProject {
     private ShowcaseProjectId id;
 
     @MapsId("showcase")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "showcase", nullable = false)
     private Showcase showcase;
 
     @MapsId("project")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "project", nullable = false)
     private Project project;
-
 }

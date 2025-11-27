@@ -31,7 +31,7 @@ public class Project {
     @Column(name = "modified")
     private Instant modified;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user", nullable = false)
     private User user;
 
