@@ -2,8 +2,7 @@ import React from 'react'
 
 const Navbar = () => {
     return (
-        <header className="flex justify-between items-center border-b-2 border-gray-400 sticky">
-
+        <header className="flex justify-between items-center border-b-2 border-gray-400 sticky top-0 z-50 bg-white">
             <a href="/" className="text-[25px] ml-[30px]">
                 <img src="/mosaic.svg" alt="Mosaic Logo" className="h-10 w-auto"></img>
             </a>

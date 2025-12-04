@@ -1,11 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import Navbar from "./Navbar.jsx";
+import { useNavigate, useParams } from "react-router-dom";
+import Navbar from "../Navbar.jsx";
 import { Button, Field, Input, Textarea } from "@fluentui/react-components";
-import ShowcaseService from "../service/ShowcaseService.jsx";
-import ThemeService from "../service/ThemeService.jsx";
+import ShowcaseService from "../../service/ShowcaseService.jsx";
+import ThemeService from "../../service/ThemeService.jsx";
 
 
 const ShowcaseAdd = () => {
+    const navigate = useNavigate();
+    const { id } = useParams();
+
     const [imagePreview, setImagePreview] = useState();
     const [title, setTitle] = useState('');
     const [themes, setThemes] = useState([]);
@@ -35,19 +39,32 @@ const ShowcaseAdd = () => {
         e.preventDefault();
 
         const showcase = {
+            id: id ? Number(id) : null,
             title,
             theme,
             description,
             start,
             end
-        }
+        };
 
-        ShowcaseService.create(showcase, selectedFile)
-            .then(response => console.log(response.data))
-            .catch(error => console.error(error));
-    }
+        ShowcaseService.save(showcase, selectedFile)
+            .then(() => navigate("/showcases"))
+            .catch(console.error);
+    };
 
     useEffect(() => {
+        if (id) {
+            ShowcaseService.get(id).then(response => {
+                setTitle(response.data.title);
+                setTheme(response.data.theme);
+                setDescription(response.data.description);
+                setStartDate(response.data.start);
+                setEndDate(response.data.end);
+                setImagePreview(`http://localhost:8080/assets/images/showcases/${response.data.heroImage}`);
+                setSelectedFile(response.data.heroImage);
+            })
+        }
+
         ThemeService.getAll().then((response) => {
             setThemes(response.data);
         });
@@ -94,7 +111,7 @@ const ShowcaseAdd = () => {
                             />
                         </Field>
                         <div className="flex-1">
-
+                            {/*Filler*/}
                         </div>
                         <Field label="Start Date">
                             <Input
@@ -120,7 +137,7 @@ const ShowcaseAdd = () => {
                         <Field label="Upload Image">
                             <Input
                                 type="file"
-                                required={true}
+                                required={!id} // only required when creating
                                 accept="image/*"
                                 onChange={handleImageChange}
                             />
@@ -139,7 +156,7 @@ const ShowcaseAdd = () => {
                     type="submit"
                     appearance="primary"
                 >
-                    Add Showcase
+                    Save
                 </Button>
             </form>
         </div>

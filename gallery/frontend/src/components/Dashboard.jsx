@@ -1,6 +1,6 @@
 import React from 'react'
 import Navbar from "./Navbar.jsx";
-import ShowcaseList from "./ShowcaseList.jsx";
+import ShowcaseList from "./showcase/ShowcaseList.jsx";
 
 const Dashboard = () => {
     return (
