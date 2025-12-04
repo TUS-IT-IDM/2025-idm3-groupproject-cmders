@@ -3,8 +3,8 @@ import axios from 'axios';
 const API = '/showcases';
 
 class ShowcaseService {
-    getAll() {
-        return axios.get('http://localhost:8080/api/showcases', {
+    get(id) {
+        return axios.get(`http://localhost:8080/api/showcases/${id}`, {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -12,8 +12,8 @@ class ShowcaseService {
         });
     }
 
-    get(id) {
-        return axios.get(`http://localhost:8080/api/showcases/${id}`, {
+    getAll() {
+        return axios.get('http://localhost:8080/api/showcases', {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -39,6 +39,12 @@ class ShowcaseService {
             headers: {
                 'Content-Type': 'multipart/form-data'
             },
+            withCredentials: true
+        });
+    }
+
+    delete(id) {
+        return axios.delete(`http://localhost:8080/api/showcases/${id}`, {
             withCredentials: true
         });
     }

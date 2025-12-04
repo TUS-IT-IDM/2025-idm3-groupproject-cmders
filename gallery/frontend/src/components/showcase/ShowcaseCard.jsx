@@ -1,8 +1,17 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { Button } from '@fluentui/react-components'
+import ShowcaseService from "../../service/ShowcaseService.jsx";
 
 const ShowcaseCard = ({ showcase }) => {
+    const handleDelete = () => {
+        ShowcaseService.delete(showcase.id)
+            .then(() => {
+                window.location.reload();
+            })
+            .catch(error => console.error(`Error deleting showcase with id: ${showcase.id}`, error))
+    }
+
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-UK', {
@@ -39,15 +48,14 @@ const ShowcaseCard = ({ showcase }) => {
                             Edit
                         </Button>
                     </Link>
-                    <Link to={`/showcase/${showcase.id}/edit`}>
-                        <Button
-                            appearance="primary"
-                            href={"/showcase/" + showcase.id}
-                            style={{ backgroundColor: '#9C0D38', color: 'white'}}
-                        >
-                            Delete
-                        </Button>
-                    </Link>
+                    <Button
+                        appearance="primary"
+                        href={"/showcase/" + showcase.id}
+                        onClick={handleDelete}
+                        style={{ backgroundColor: '#9C0D38', color: 'white'}}
+                    >
+                        Delete
+                    </Button>
                 </div>
             </div>
         </div>
