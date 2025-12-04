@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Service
 public class ShowcaseService {
-    private static final String UPLOAD_DIR = "src/main/resources/static/assets/images/showcases/";
+    private static final String UPLOAD_DIR = "uploads/images/showcases/";
     @Autowired
     private ShowcaseRepository showcaseRepository;
     @Autowired
@@ -36,7 +36,7 @@ public class ShowcaseService {
         return showcaseRepository.findById(showcase);
     }
 
-    public void save(Showcase showcase, MultipartFile file) throws IOException {
+    /*public void save(Showcase showcase, MultipartFile file) throws IOException {
         String fileName = "";
         if (!file.isEmpty()) {
             Files.createDirectories(Paths.get(UPLOAD_DIR));
@@ -46,10 +46,50 @@ public class ShowcaseService {
             showcase.setHeroImage(fileName);
         }
         showcaseRepository.save(showcase);
+    }*/
+
+    public void save(Showcase incoming, MultipartFile file) throws IOException {
+        Showcase showcase;
+
+        // Case 1: Update existing
+        if (incoming.getId() != null) {
+            showcase = findOne(incoming.getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Showcase not found with id: " + incoming.getId()));
+        }
+        // Case 2: Create new
+        else {
+            showcase = new Showcase();
+        }
+
+        // Set properties from an incoming object
+        showcase.setTheme(incoming.getTheme());
+        showcase.setTitle(incoming.getTitle());
+        showcase.setStart(incoming.getStart());
+        showcase.setEnd(incoming.getEnd());
+        showcase.setDescription(incoming.getDescription());
+        showcase.setStatus(incoming.getStatus());
+
+        // Upload file
+        String uploadedFileName = handleFile(file);
+        if (uploadedFileName != null) {
+            showcase.setHeroImage(uploadedFileName);
+        }
+
+        showcaseRepository.save(showcase);
     }
 
-    public void saveShowcase(Showcase showcase) {
-        showcaseRepository.save(showcase);
+    public String handleFile(MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
+
+        Files.createDirectories(Paths.get(UPLOAD_DIR));
+
+        String fileName = file.getOriginalFilename();
+        Path filePath = Paths.get(UPLOAD_DIR + fileName);
+        Files.write(filePath, file.getBytes());
+
+        return fileName;
     }
 
     public void saveShowcase(Showcase showcase, MultipartFile file) throws IOException {

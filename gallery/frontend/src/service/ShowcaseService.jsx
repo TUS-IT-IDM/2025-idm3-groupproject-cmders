@@ -30,7 +30,7 @@ class ShowcaseService {
         });
     }
 
-    create(showcase, file) {
+    save(showcase, file) {
         const formData = new FormData();
         formData.append('showcase', new Blob([JSON.stringify(showcase)], { type: 'application/json' }));
         formData.append('file', file);
