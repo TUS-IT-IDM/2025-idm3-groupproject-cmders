@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import ShowcaseService from '../service/ShowcaseService.jsx';
-import Navbar from "./Navbar.jsx";
-import ProjectCard from "./ProjectCard.jsx";
+import ShowcaseService from '../../service/ShowcaseService.jsx';
+import Navbar from "../Navbar.jsx";
+import ProjectCard from "../ProjectCard.jsx";
 
 const Showcase = () => {
     const { id } = useParams();
@@ -34,7 +34,10 @@ const Showcase = () => {
             </div>
             <div className="mx-32">
                 <h1>{showcase.title}</h1>
+                <h3>{showcase.theme.name}</h3>
                 <p>{showcase.description}</p>
+                <p>{showcase.start} - {showcase.end}</p>
+                <p>{showcase.status}</p>
 
                 <h2>Projects</h2>
                 <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4">

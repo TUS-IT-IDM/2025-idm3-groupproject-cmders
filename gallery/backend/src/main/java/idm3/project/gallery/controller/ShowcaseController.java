@@ -37,7 +37,12 @@ public class ShowcaseController {
     }
 
     @PostMapping
-    public void saveShowcase(@RequestPart("showcase") Showcase showcase, @RequestPart("file") MultipartFile file) throws IOException {
-        showcaseService.saveShowcase(showcase, file);
+    public void save(@RequestPart("showcase") Showcase showcase, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+        showcaseService.save(showcase, file);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") Integer id) {
+        showcaseService.delete(id);
     }
 }

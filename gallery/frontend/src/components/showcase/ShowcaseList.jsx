@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ShowcaseService from '../service/ShowcaseService.jsx';
+import ShowcaseService from '../../service/ShowcaseService.jsx';
 import ShowcaseCard from './ShowcaseCard.jsx';
 import { Button, SplitButton } from "@fluentui/react-components";
 import { Link } from "react-router-dom";
