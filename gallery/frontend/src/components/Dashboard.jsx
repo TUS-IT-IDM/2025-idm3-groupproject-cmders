@@ -18,21 +18,6 @@ const Dashboard = () => {
 
     if (!user) return <div>Loading...</div>;
 
-    let Content;
-    switch (user.type) {
-        case 'Student':
-            Content = () => Student
-            break;
-        case 'Employer':
-            Content = () => Employer
-            break;
-        case 'Admin':
-            Content = () => Admin
-            break;
-        default:
-            Content = () => <p>Error...</p>;
-    }
-
     return (
         <>
             <Navbar />
