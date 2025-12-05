@@ -8,6 +8,7 @@ import Login from "./components/Login.jsx";
 import Showcase from "./components/showcase/Showcase.jsx";
 import ProjectList from "./components/project/ProjectList.jsx";
 import ProjectAdd from "./components/project/ProjectAdd.jsx";
+import Project from "./components/project/Project.jsx";
 
 const App = () => {
     return (
@@ -21,6 +22,7 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/project/list" element={<ProjectList />} />
                 <Route path="/project/add" element={<ProjectAdd />} />
+                <Route path="/project/:id" element={<Project />} />
             </Routes>
         </Router>
     );
