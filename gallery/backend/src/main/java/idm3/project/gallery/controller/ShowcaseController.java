@@ -21,14 +21,14 @@ public class ShowcaseController {
         this.showcaseService = showcaseService;
     }
 
-    @GetMapping
-    public List<Showcase> getAll() {
-        return showcaseService.findAll();
-    }
-
     @GetMapping({"/{id}"})
     public Showcase get(@PathVariable("id") Integer id) {
         return showcaseService.findOne(id).get();
+    }
+
+    @GetMapping
+    public List<Showcase> getAll() {
+        return showcaseService.findAll();
     }
 
     @GetMapping("/{id}/projects")
