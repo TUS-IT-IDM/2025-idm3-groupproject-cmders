@@ -25,7 +25,7 @@ public class UserProjectLike {
     public UserProjectLike(User user, Project project) {
         this.user = user;
         this.project = project;
-        this.id = new UserProjectLikeId(user.getId(), project.getId());
+
     }
 
     // getters / setters

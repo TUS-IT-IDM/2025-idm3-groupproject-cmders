@@ -2,6 +2,7 @@ package idm3.project.gallery.controller;
 
 import idm3.project.gallery.model.Project;
 import idm3.project.gallery.model.Showcase;
+import idm3.project.gallery.model.ShowcaseProject;
 import idm3.project.gallery.model.User;
 import idm3.project.gallery.service.*;
 import jakarta.servlet.ServletContext;
@@ -9,11 +10,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.ui.Model;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,8 +41,6 @@ public class MainGalleryController {
     private ThumbnailService thumbnailService;
     @Autowired
     private ServletContext servletContext;
-
-    // >>> NEW: inject LikeService <<<
     @Autowired
     private LikeService likeService;
 
@@ -115,15 +114,13 @@ public class MainGalleryController {
         mav.addObject("AllProjectsRecentFirst", allProjects);
         mav.addObject("AllLiveShowcases", allShowcases);
 
-        // >>> STEP 5: add like data for the view <<<
-        // Map projectId -> like count
+        // Add like data for the view
         Map<Integer, Long> projectLikeCounts = allProjects.stream()
                 .collect(Collectors.toMap(
                         Project::getId,
                         p -> likeService.getLikeCount(p.getId())
                 ));
 
-        // Map projectId -> has current employer liked?
         Map<Integer, Boolean> employerLiked = new HashMap<>();
         User loggedIn = (User) session.getAttribute("loggedInUser");
         if (loggedIn != null && loggedIn.getType() == User.Type.Employer) {
@@ -135,7 +132,6 @@ public class MainGalleryController {
 
         mav.addObject("projectLikeCounts", projectLikeCounts);
         mav.addObject("employerLiked", employerLiked);
-        // <<< END STEP 5 >>>
 
         return mav;
     }
@@ -147,7 +143,7 @@ public class MainGalleryController {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
 
         if (loggedInUser == null) {
-            modelAndView.setViewName("redirect:/login");
+            modelAndView.setViewName("redirect:/MainGallery/Login");
         } else {
             modelAndView.addObject("user", loggedInUser);
             modelAndView.addObject("showcases", showcaseService.findAll());
@@ -163,11 +159,28 @@ public class MainGalleryController {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
 
         if (loggedInUser == null) {
-            modelAndView.setViewName("redirect:/login");
+            modelAndView.setViewName("redirect:/MainGallery/Login");
         } else {
             modelAndView.addObject("user", loggedInUser);
         }
 
+        return modelAndView;
+    }
+
+    @GetMapping("/employerDashboard")
+    public ModelAndView employerDashboard(HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView("employerDashboard");
+
+        User loggedIn = (User) session.getAttribute("loggedInUser");
+        if (loggedIn == null || loggedIn.getType() != User.Type.Employer) {
+            modelAndView.setViewName("redirect:/MainGallery/Login");
+            return modelAndView;
+        }
+
+        List<Project> liked = likeService.getLikedProjectsForEmployer(loggedIn.getId());
+
+        modelAndView.addObject("user", loggedIn);
+        modelAndView.addObject("likedProjects", liked);
         return modelAndView;
     }
 
@@ -177,7 +190,6 @@ public class MainGalleryController {
             String imageDirPathShowcase = "src/main/resources/static/assets/images/showcases/";
             String thumbnailDirPathShowcase = "src/main/resources/static/assets/images/showcases/thumbnail/";
             for (Showcase showcase : allShowcases) {
-
                 System.out.println(imageDirPathShowcase + showcase.getHeroImage());
                 File image = new File(imageDirPathShowcase + "/" + showcase.getHeroImage());
                 System.out.println("thumbnail:" + thumbnailDirPathShowcase + "thumb_" + image.getName());
@@ -193,13 +205,11 @@ public class MainGalleryController {
     }
 
     private void generateThumbnailProject(List<Project> allProjects) {
-        // Generate thumbnail
         try {
             String imageDirPathProject = "src/main/resources/static/assets/images/projects/";
             String thumbnailDirPathProject = "src/main/resources/static/assets/images/projects/thumbnail/";
 
             for (Project project : allProjects) {
-
                 System.out.println(imageDirPathProject + project.getHeroImage());
                 File image = new File(imageDirPathProject + "/" + project.getHeroImage());
                 System.out.println("thumbnail:" + thumbnailDirPathProject + "thumb_" + image.getName());
@@ -213,14 +223,14 @@ public class MainGalleryController {
         }
     }
 
-    // --- CRUD ---
+    // --- SHOWCASE CRUD ---
+
     // Display All Showcases
-    @RequestMapping(value = {"/allShowcases", ""})
+    @GetMapping("/allShowcases")
     public ModelAndView displayAllShowcases() {
         List<Showcase> allShowcases = generateThumbnailShowcases();
         ModelAndView modelAndView = new ModelAndView("/allShowcases");
         modelAndView.addObject("showcases", allShowcases);
-
         return modelAndView;
     }
 
@@ -234,9 +244,11 @@ public class MainGalleryController {
     }
 
     @PostMapping("/submitNewShowcase")
-    public ModelAndView createShowcase(@ModelAttribute("newShowcase") @Valid Showcase showcase, BindingResult result, @RequestParam("hero_image") MultipartFile file) {
+    public ModelAndView createShowcase(@ModelAttribute("newShowcase") @Valid Showcase showcase,
+                                       BindingResult result,
+                                       @RequestParam("hero_image") MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            result.rejectValue("hero_image", "file.empty", "Hero image is required");
+            result.rejectValue("heroImage", "file.empty", "Hero image is required");
         }
 
         if (result.hasErrors()) {
@@ -255,21 +267,54 @@ public class MainGalleryController {
         return new ModelAndView("redirect:/MainGallery/allShowcases");
     }
 
-    // Update Showcase
-    @GetMapping("/editShowcase/{id}")
-    public ModelAndView updateShowcase(@PathVariable("id") Integer id) {
+    // Show Showcase with Projects (and like data)
+    @GetMapping("/showShowcase/{id}")
+    public ModelAndView showShowcase(@PathVariable("id") Integer id, HttpSession session) {
         if (showcaseService.findOne(id).isEmpty()) {
             return new ModelAndView("/error", "error", "Showcase not found.");
-        } else {
-            ModelAndView modelAndView = new ModelAndView("/editShowcase");
-            modelAndView.addObject("showcase", showcaseService.findOne(id).get());
-            modelAndView.addObject("themes", themeService.findAll());
-            return modelAndView;
         }
+
+        ModelAndView modelAndView = new ModelAndView("/showShowcase");
+        Showcase showcase = showcaseService.findOne(id).get();
+
+        // Get ShowcaseProject join entities and convert to Projects
+        List<ShowcaseProject> showcaseProjectLinks = showcaseService.getProjects(id);
+        List<Project> showcaseProjects = showcaseProjectLinks.stream()
+                .map(ShowcaseProject::getProject)
+                .collect(Collectors.toList());
+
+        modelAndView.addObject("showcase", showcase);
+        modelAndView.addObject("themes", themeService.findAll());
+        modelAndView.addObject("showcaseProjects", showcaseProjects);
+        modelAndView.addObject("projects", projectService.findAll());
+        modelAndView.addObject("user", userService.findAll());
+
+        // Add like data
+        Map<Integer, Long> projectLikeCounts = showcaseProjects.stream()
+                .collect(Collectors.toMap(
+                        Project::getId,
+                        p -> likeService.getLikeCount(p.getId())
+                ));
+
+        Map<Integer, Boolean> employerLiked = new HashMap<>();
+        User loggedIn = (User) session.getAttribute("loggedInUser");
+        if (loggedIn != null && loggedIn.getType() == User.Type.Employer) {
+            for (Project p : showcaseProjects) {
+                boolean liked = likeService.hasEmployerLikedProject(loggedIn.getId(), p.getId());
+                employerLiked.put(p.getId(), liked);
+            }
+        }
+
+        modelAndView.addObject("projectLikeCounts", projectLikeCounts);
+        modelAndView.addObject("employerLiked", employerLiked);
+
+        return modelAndView;
     }
 
     @PostMapping("/saveShowcase")
-    public ModelAndView saveShowcase(@ModelAttribute("showcase") Showcase showcase, @RequestParam("hero_image") MultipartFile file, BindingResult result) {
+    public ModelAndView saveShowcase(@ModelAttribute("showcase") Showcase showcase,
+                                     @RequestParam("hero_image") MultipartFile file,
+                                     BindingResult result) {
         if (result.hasErrors()) {
             String viewName = (showcase.getId() == null) ? "/newShowcase" : "/editShowcase";
             return new ModelAndView(viewName);
@@ -310,46 +355,21 @@ public class MainGalleryController {
         return new ModelAndView("/allShowcases", "showcases", searchResults);
     }
 
-    @GetMapping("/showShowcase/{id}")
-    public ModelAndView showShowcase(@PathVariable("id") Integer id) {
-        if (showcaseService.findOne(id).isEmpty()) {
-            return new ModelAndView("/error", "error", "Showcase not found.");
-        } else {
-            ModelAndView modelAndView = new ModelAndView("/showShowcase");
-            modelAndView.addObject("showcase", showcaseService.findOne(id).get());
-            modelAndView.addObject("themes", themeService.findAll());
-            modelAndView.addObject("showcaseProjects", showcaseService.getProjects(id));
-            modelAndView.addObject("projects", projectService.findAll());
-            modelAndView.addObject("user", userService.findAll());
-            return modelAndView;
-        }
-    }
-
-    @GetMapping("/employerDashboard")
-    public String employerDashboard(HttpSession session, Model model) {
-        User loggedIn = (User) session.getAttribute("loggedInUser");
-        if (loggedIn == null || loggedIn.getType() != User.Type.Employer) {
-            return "redirect:/MainGallery/Login";
-        }
-
-        List<Project> liked = likeService.getLikedProjectsForEmployer(loggedIn.getId());
-
-        model.addAttribute("user", loggedIn);
-        model.addAttribute("likedProjects", liked);
-        return "employerDashboard";
-    }
+    // --- EMPLOYER LIKE/UNLIKE ENDPOINTS ---
 
     @PostMapping("/projects/{projectId}/like")
     public String likeProject(@PathVariable Integer projectId,
                               HttpSession session,
                               HttpServletRequest request) {
         User loggedIn = (User) session.getAttribute("loggedInUser");
-        if (loggedIn == null)
+        if (loggedIn == null) {
             return "redirect:/MainGallery/Login";
+        }
 
         likeService.likeProject(loggedIn.getId(), projectId);
 
-        return "redirect:" + request.getHeader("Referer");
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/MainGallery/HomePage");
     }
 
     @PostMapping("/projects/{projectId}/unlike")
@@ -357,11 +377,13 @@ public class MainGalleryController {
                                 HttpSession session,
                                 HttpServletRequest request) {
         User loggedIn = (User) session.getAttribute("loggedInUser");
-        if (loggedIn == null)
+        if (loggedIn == null) {
             return "redirect:/MainGallery/Login";
+        }
 
         likeService.unlikeProject(loggedIn.getId(), projectId);
 
-        return "redirect:" + request.getHeader("Referer");
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/MainGallery/HomePage");
     }
 }

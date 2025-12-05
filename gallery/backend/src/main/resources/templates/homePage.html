@@ -149,15 +149,16 @@
                     <p class="card-text" style="max-height: 3rem; overflow: hidden;"
                        th:text="${project.description}"></p>
 
-                    <a th:href="@{'/project/details/' + ${project.id}}" class="btn btn-primary btn-sm">
+                    <a th:href="@{'/project/details/' + ${project.id}}"
+                       class="btn btn-primary btn-sm">
                         See Project
                     </a>
 
-                    <!-- STEP 7: LIKE / UNLIKE FOR EMPLOYERS ONLY -->
+                    <!-- Like / Unlike for Employers only -->
                     <div class="mt-2"
                          th:if="${session.loggedInUser != null and session.loggedInUser.type.name() == 'Employer'}">
 
-                        <!-- Show 'Save' if employer has NOT liked this project yet -->
+                        <!-- Save if not liked -->
                         <form th:if="${!employerLiked[project.id]}"
                               th:action="@{'/MainGallery/projects/' + ${project.id} + '/like'}"
                               method="post"
@@ -167,7 +168,7 @@
                             </button>
                         </form>
 
-                        <!-- Show 'Remove' if employer HAS liked this project -->
+                        <!-- Remove if already liked -->
                         <form th:if="${employerLiked[project.id]}"
                               th:action="@{'/MainGallery/projects/' + ${project.id} + '/unlike'}"
                               method="post"
@@ -178,7 +179,7 @@
                         </form>
                     </div>
 
-                    <!-- STEP 7: LIKE COUNT (VISIBLE TO EVERYONE) -->
+                    <!-- Like count visible to everyone -->
                     <p class="mt-1 mb-0">
                         <strong th:text="${projectLikeCounts[project.id]}">0</strong> likes
                     </p>
