@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ShowcaseService from '../../service/ShowcaseService.jsx';
 import Navbar from "../Navbar.jsx";
-import ProjectCard from "../ProjectCard.jsx";
+import ProjectCard from "../project/ProjectCard.jsx";
 
 const Showcase = () => {
     const { id } = useParams();

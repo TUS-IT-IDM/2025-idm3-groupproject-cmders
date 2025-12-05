@@ -36,17 +36,6 @@ public class ShowcaseService {
         return showcaseRepository.findById(showcase);
     }
 
-    /*public void save(Showcase showcase, MultipartFile file) throws IOException {
-        String fileName = "";
-        if (!file.isEmpty()) {
-            Files.createDirectories(Paths.get(UPLOAD_DIR));
-            fileName = file.getOriginalFilename();
-            Path filePath = Paths.get(UPLOAD_DIR + fileName);
-            Files.write(filePath, file.getBytes());
-            showcase.setHeroImage(fileName);
-        }
-        showcaseRepository.save(showcase);
-    }*/
 
     public void save(Showcase incoming, MultipartFile file) throws IOException {
         Showcase showcase;
