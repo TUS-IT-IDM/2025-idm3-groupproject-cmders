@@ -7,6 +7,7 @@ import ShowcaseAdd from "./components/showcase/ShowcaseAdd.jsx";
 import Login from "./components/Login.jsx";
 import Showcase from "./components/showcase/Showcase.jsx";
 import ProjectList from "./components/project/ProjectList.jsx";
+import ProjectAdd from "./components/project/ProjectAdd.jsx";
 
 const App = () => {
     return (
@@ -19,6 +20,7 @@ const App = () => {
                 <Route path="/showcase/add" element={<ShowcaseAdd />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/project/list" element={<ProjectList />} />
+                <Route path="/project/add" element={<ProjectAdd />} />
             </Routes>
         </Router>
     );
