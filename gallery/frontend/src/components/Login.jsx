@@ -18,7 +18,7 @@ const Login = () => {
         };
 
         AuthService.login(user)
-            .then(() => navigate("/showcases"))
+            .then(() => navigate("/dashboard"))
             .catch(console.error);
     }
 
