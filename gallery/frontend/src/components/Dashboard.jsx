@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react'
-import Navbar from "./Navbar.jsx";
-import ShowcaseList from "./showcase/ShowcaseList.jsx";
 import AuthService from "../service/AuthService.jsx";
+import Navbar from "./Navbar.jsx";
+import Student from "./Student.jsx";
+import Employer from "./Employer.jsx";
+import Admin from "./Admin.jsx";
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
@@ -16,6 +18,21 @@ const Dashboard = () => {
 
     if (!user) return <div>Loading...</div>;
 
+    let Content;
+    switch (user.type) {
+        case 'Student':
+            Content = () => Student
+            break;
+        case 'Employer':
+            Content = () => Employer
+            break;
+        case 'Admin':
+            Content = () => Admin
+            break;
+        default:
+            Content = () => <p>Error...</p>;
+    }
+
     return (
         <>
             <Navbar />
@@ -26,7 +43,10 @@ const Dashboard = () => {
                 </div>
                 <img src="/tile-pattern.svg" alt="Tile Pattern" className="w-auto max-h-[300px] mt-4 mb-8"/>
             </div>
-            <ShowcaseList />
+            {user.type === 'Student' && <Student />}
+            {user.type === 'Employer' && <Employer />}
+            {user.type === 'Admin' && <Admin />}
+            {(!['Student', 'Employer', 'Admin'].includes(user.type)) && <div>Error...</div>}
         </>
     );
 };
