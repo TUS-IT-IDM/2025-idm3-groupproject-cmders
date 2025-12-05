@@ -5,12 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "project")
 public class Project {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -38,4 +41,20 @@ public class Project {
     @Column(name = "hero_image")
     private String heroImage;
 
+    /**
+     * Users who have liked this project (join entity).
+     */
+    @OneToMany(
+            mappedBy = "project",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private Set<UserProjectLike> likes = new HashSet<>();
+
+    /* ---------- Helper method for like count ---------- */
+
+    public int getLikeCount() {
+        return likes == null ? 0 : likes.size();
+    }
 }

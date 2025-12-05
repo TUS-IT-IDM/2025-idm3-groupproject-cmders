@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employer Dashboard</title>
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}" />
+</head>
+<body>
+<header th:replace="fragments/navbar :: navbar"></header>
+
+<section class="container">
+    <h2>Welcome, <span th:text="${user.firstName}">Employer</span>!</h2>
+
+    <h3>Saved Projects</h3>
+
+    <div th:if="${#lists.isEmpty(likedProjects)}">
+        <p>You haven’t saved any projects yet. Browse the showcases and click the ♥ icon to save ones that interest you.</p>
+    </div>
+
+    <div class="project-grid" th:unless="${#lists.isEmpty(likedProjects)}">
+        <div class="project-card" th:each="p : ${likedProjects}">
+            <img th:src="@{${p.heroImage}}" alt="project hero" />
+            <h4 th:text="${p.title}"></h4>
+            <p th:text="${p.descSummary}"></p>
+
+            <form th:action="@{'/MainGallery/projects/' + ${p.id} + '/unlike'}" method="post">
+                <button type="submit" class="btn btn-secondary">Remove ♥</button>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>

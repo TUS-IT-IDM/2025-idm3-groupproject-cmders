@@ -145,10 +145,43 @@
                      class="card-img-top" alt="Project Image" style="height: 200px; object-fit: cover;"/>
                 <div class="card-body">
                     <h5 class="card-title" th:text="${project.title}"></h5>
+
                     <p class="card-text" style="max-height: 3rem; overflow: hidden;"
                        th:text="${project.description}"></p>
-                    <a th:href="@{'/project/details/' + ${project.id}}" class="btn btn-primary btn-sm">See
-                        Project</a>
+
+                    <a th:href="@{'/project/details/' + ${project.id}}" class="btn btn-primary btn-sm">
+                        See Project
+                    </a>
+
+                    <!-- STEP 7: LIKE / UNLIKE FOR EMPLOYERS ONLY -->
+                    <div class="mt-2"
+                         th:if="${session.loggedInUser != null and session.loggedInUser.type.name() == 'Employer'}">
+
+                        <!-- Show 'Save' if employer has NOT liked this project yet -->
+                        <form th:if="${!employerLiked[project.id]}"
+                              th:action="@{'/MainGallery/projects/' + ${project.id} + '/like'}"
+                              method="post"
+                              style="display: inline;">
+                            <button type="submit" class="btn btn-outline-primary btn-sm">
+                                ♥ Save
+                            </button>
+                        </form>
+
+                        <!-- Show 'Remove' if employer HAS liked this project -->
+                        <form th:if="${employerLiked[project.id]}"
+                              th:action="@{'/MainGallery/projects/' + ${project.id} + '/unlike'}"
+                              method="post"
+                              style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                ♥ Remove
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- STEP 7: LIKE COUNT (VISIBLE TO EVERYONE) -->
+                    <p class="mt-1 mb-0">
+                        <strong th:text="${projectLikeCounts[project.id]}">0</strong> likes
+                    </p>
                 </div>
             </div>
         </div>
