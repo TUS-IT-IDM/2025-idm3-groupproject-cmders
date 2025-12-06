@@ -27,7 +27,7 @@ const Showcase = () => {
             <Navbar />
             <div className="w-full h-96 overflow-hidden">
                 <img
-                    src={showcase.heroImage}
+                    src={`http://localhost:8080/assets/images/showcases/${showcase.heroImage}`}
                     className="w-full h-full object-cover object-center"
                     alt=""
                 />

@@ -36,6 +36,7 @@ public class MainGalleryController {
     private ThumbnailService thumbnailService;
     @Autowired
     private ServletContext servletContext;
+
     // Display Login Page
     @GetMapping("/Login")
     public ModelAndView showLoginPage() {
