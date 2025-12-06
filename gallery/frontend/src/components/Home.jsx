@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from "./Navbar.jsx";
+import {Button} from "@fluentui/react-components";
 import {
     Carousel,
     CarouselSlider,
@@ -8,9 +9,10 @@ import {
     CarouselNav,
     CarouselNavButton
 } from "@fluentui/react-carousel"
+import { FolderRegular, LeafTwoRegular, ConnectedRegular } from "@fluentui/react-icons";
 import ShowcaseService from "../service/ShowcaseService.jsx";
-import {Button} from "@fluentui/react-components";
-import {Link, useNavigate} from "react-router-dom";
+
+import { Link } from "react-router-dom";
 
 const Home = () => {
     const [showcases, setShowcases] = useState([]);
@@ -86,6 +88,29 @@ const Home = () => {
                     </CarouselNav>
                 </CarouselNavContainer>
             </Carousel>
+
+            {/*---- Mission Statement Section ----*/}
+            <div className="flex mx-32 gap-8 h-[35vh]">
+                <div className="flex flex-col justify-center items-center flex-1">
+                    <FolderRegular className="text-5xl" />
+                    <h2>Projects</h2>
+                    <p className="text-center">
+                        Our mission is to provide a stage where students can showcase their creativity, skills, and innovative projects to a global audience.
+                    </p>
+                </div>
+                <div className="flex flex-col justify-center items-center flex-1">
+                    <LeafTwoRegular className="text-5xl" />
+                    <h2>Connect</h2>
+                    <p className="text-center">
+                        We are a dynamic platform proudly offered by TUS, dedicated to empowering students and bridging the gap between education and industry.                    </p>
+                </div>
+                <div className="flex flex-col justify-center items-center flex-1">
+                    <ConnectedRegular className="text-5xl" />
+                    <h2>Network</h2>
+                    <p className="text-center">
+                        If you're an employer seeking the brightest minds, TUS Gallery is your trusted partner on this exciting educational and professional adventure.                    </p>
+                </div>
+            </div>
         </>
     );
 };
