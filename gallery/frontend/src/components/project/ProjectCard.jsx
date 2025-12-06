@@ -10,7 +10,7 @@ const ProjectCard = ({ project }) => {
                 <h3>{project.title}</h3>
                 <p>{project.descSummary}</p>
                 <br/>
-                <p>{project.user.firstName + " " + project.user.lastName}</p>
+                {/*<p>{project.user?.firstName + " " + project.user?.lastName}</p>*/}
                 <Link to={"/project/" + project.id}>
                     <Button
                         appearance="primary"
