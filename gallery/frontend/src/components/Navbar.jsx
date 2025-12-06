@@ -55,7 +55,7 @@ const Navbar = () => {
                                 }
                                 className="h-full"
                             >
-                                {user.firstName}
+                                {`${user.firstName.charAt(0)}. ${user.lastName}`}
                             </Button>
                         </MenuTrigger>
                         <MenuPopover>
