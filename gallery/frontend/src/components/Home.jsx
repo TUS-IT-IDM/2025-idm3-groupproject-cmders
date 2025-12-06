@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from "./Navbar.jsx";
-import {Button} from "@fluentui/react-components";
 import {
     Carousel,
     CarouselSlider,
@@ -9,9 +8,9 @@ import {
     CarouselNav,
     CarouselNavButton
 } from "@fluentui/react-carousel"
+import { Button } from "@fluentui/react-components";
 import { FolderRegular, LeafTwoRegular, ConnectedRegular } from "@fluentui/react-icons";
 import ShowcaseService from "../service/ShowcaseService.jsx";
-
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -38,6 +37,8 @@ const Home = () => {
     return (
         <>
             <Navbar />
+
+            {/*---- Carousel ----*/}
             <Carousel
                 activeIndex={activeIndex}
                 onActiveIndexChange={(e, data) => setActiveIndex(data.index)}
@@ -111,6 +112,8 @@ const Home = () => {
                         If you're an employer seeking the brightest minds, TUS Gallery is your trusted partner on this exciting educational and professional adventure.                    </p>
                 </div>
             </div>
+
+            {/*---- Recent Projects Section ----*/}
         </>
     );
 };
