@@ -13,20 +13,35 @@ import {Button} from "@fluentui/react-components";
 import {Link, useNavigate} from "react-router-dom";
 
 const Home = () => {
-    const navigate = useNavigate();
     const [showcases, setShowcases] = useState([]);
+    const [activeIndex, setActiveIndex] = useState(0);
 
     useEffect(() => {
         ShowcaseService.getAll()
             .then(response => {
                 setShowcases(response.data);
-            })
-    })
+            });
+    }, []);
+
+    useEffect(() => {
+        if (showcases.length === 0) return;
+
+        const interval = setInterval(() => {
+            setActiveIndex((prevIndex) => (prevIndex + 1) % showcases.length);
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, [showcases.length]);
 
     return (
         <>
             <Navbar />
-            <Carousel groupSize={1} circular className="h-[80vh] relative">
+            <Carousel
+                activeIndex={activeIndex}
+                onActiveIndexChange={(e, data) => setActiveIndex(data.index)}
+                groupSize={1}
+                circular
+                className="h-[80vh] relative">
                 <CarouselSlider className="h-full">
                     {showcases.map((showcase, index) => (
                         <CarouselCard key={index} index={index} className="relative h-full w-full">
