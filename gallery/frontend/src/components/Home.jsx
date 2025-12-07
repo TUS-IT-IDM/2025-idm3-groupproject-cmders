@@ -117,9 +117,6 @@ const Home = () => {
 
             {/*---- Recent Projects Section ----*/}
             <ProjectList className="mb-8" />
-
-            {/*---- Footer ----*/}
-            <Footer />
         </>
     );
 };
