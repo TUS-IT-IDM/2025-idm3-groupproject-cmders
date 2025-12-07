@@ -1,16 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@fluentui/react-components'
-import ProjectService from "../../service/ProjectService.jsx";
+import { Heart24Filled, Heart24Regular } from "@fluentui/react-icons";
+import UserService from "../../service/UserService.jsx";
+import AuthService from "../../service/AuthService.jsx";
 
 
 const EmployerCard = ({ project }) => {
-    const handleDelete = () => {
-        ProjectService.delete(project.id)
-            .then(() => {
-                window.location.reload();
+    const [favourite, setFavourite] = useState(false);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        AuthService.getSession()
+            .then(response => setUser(response.data))
+            .catch(() => {
+                window.location.href = "/login";
             })
-            .catch(error => console.error(`Error deleting showcase with id: ${project.id}`, error))
+    }, []);
+
+    const handleFavourite = () => {
+        setFavourite(!favourite);
+        UserService.favourite(user, project);
     }
 
     return (
@@ -20,17 +30,24 @@ const EmployerCard = ({ project }) => {
                 <h3>{project.title}</h3>
                 <p>{project.descSummary}</p>
                 <br/>
-                <p>{project.user?.firstName + " " + project.user?.lastName}</p>
-                <Link to={"/project/" + project.id}>
+                <p>{project.user.firstName + " " + project.user.lastName}</p>
+                <div className="flex gap-4">
+                    <Link to={"/project/" + project.id}>
+                        <Button
+                            appearance="primary"
+                            href={"/project/" + project.id}
+                            style={{ backgroundColor: '#6574A2', color: 'white'}}
+                        >
+                            View
+                        </Button>
+                    </Link>
+                    <div className="flex-1"></div>
                     <Button
-                        appearance="primary"
-                        href={"/project/" + project.id}
-                        style={{ backgroundColor: '#6574A2', color: 'white'}}
-                    >
-                        View
-                    </Button>
-                </Link>
-                
+                        icon={favourite ? <Heart24Filled /> : <Heart24Regular />}
+                        aria-label="Favourite"
+                        onClick={handleFavourite}
+                    />
+                </div>
             </div>
         </div>
     );
