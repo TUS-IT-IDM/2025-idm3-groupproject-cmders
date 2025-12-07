@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@fluentui/react-components'
 import ProjectService from "../../service/ProjectService.jsx";
+import {EditRegular} from "@fluentui/react-icons";
+import {DeleteRegular} from "@fluentui/react-icons";
 
 
 const ProjectCard = ({ project }) => {
@@ -19,33 +21,32 @@ const ProjectCard = ({ project }) => {
             <div className="p-4">
                 <h3>{project.title}</h3>
                 <p>{project.descSummary}</p>
-                <br/>
-                <p>{project.user?.firstName + " " + project.user?.lastName}</p>
-                <Link to={"/project/" + project.id}>
-                    <Button
-                        appearance="primary"
-                        href={"/project/" + project.id}
-                        style={{ backgroundColor: '#6574A2', color: 'white'}}
-                    >
-                        View
-                    </Button>
-                </Link>
-                <Link to={`/project/${project.id}/edit`}>
+                <p><strong>by {project.user?.firstName + " " + project.user?.lastName}</strong></p>
+                <div className="mt-4 gap-2 flex justify-start items-center w-full">
+                    <Link to={"/project/" + project.id}>
+                        <Button
+                            appearance="primary"
+                            href={"/project/" + project.id}
+                            style={{ backgroundColor: '#6574A2', color: 'white'}}
+                        >
+                            View
+                        </Button>
+                    </Link>
+                    <Link to={`/project/${project.id}/edit`}>
+                        <Button
+                            appearance="outline"
+                            href={"/project/" + project.id}
+                            icon={<EditRegular className="size-4"/>}
+                        />
+                    </Link>
                     <Button
                         appearance="outline"
                         href={"/project/" + project.id}
+                        onClick={handleDelete}
+                        icon={<DeleteRegular className="size-4"/>}
                     >
-                        Edit
                     </Button>
-                </Link>
-                <Button
-                    appearance="primary"
-                    href={"/project/" + project.id}
-                    onClick={handleDelete}
-                    style={{ backgroundColor: '#9C0D38', color: 'white'}}
-                >
-                    Delete
-                </Button>
+                </div>
             </div>
         </div>
     );

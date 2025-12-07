@@ -5,6 +5,7 @@ import Navbar from "../Navbar.jsx";
 import ProjectCard from "./ProjectCard.jsx";
 import {Button} from "@fluentui/react-components";
 import {DocumentRegular, DocumentPdfRegular, ImageRegular, MusicNote2Regular, VideoClipRegular} from "@fluentui/react-icons";
+import {SplitButton} from "@fluentui/react-components";
 
 const Project = () => {
     const { id } = useParams();
@@ -70,7 +71,17 @@ const Project = () => {
                         <p>Created: {project.created}</p>
                         <p>Modified: {project.modified}</p>
                     </div>
-                    <Button appearance="primary" style={{backgroundColor: '#9C0D38', color: 'white'}}>Add to Showcase</Button>
+                    <SplitButton
+                        appearance="primary"
+                        primaryActionButton={{
+                            style: { backgroundColor: '#9C0D38', color: 'white' }
+                        }}
+                        menuButton={{
+                            style: { backgroundColor: '#9C0D38', color: 'white' }
+                        }}
+                    >
+                        Add to Showcase
+                    </SplitButton>
                 </div>
                 <h1 className="mt-4 mb-8">Description</h1>
                 <p className="mb-8">{project.description}</p>

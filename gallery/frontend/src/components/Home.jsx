@@ -114,6 +114,9 @@ const Home = () => {
             </div>
 
             {/*---- Recent Projects Section ----*/}
+            <div className="mx-32">
+                <h2 className="mb-8">Recent Projects</h2>
+            </div>
         </>
     );
 };
