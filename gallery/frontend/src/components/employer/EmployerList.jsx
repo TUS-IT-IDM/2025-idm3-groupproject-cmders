@@ -1,17 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import ProjectService from '../../service/ProjectService.jsx';
+import UserService from '../../service/UserService.jsx';
 import EmployerCard from './EmployerCard.jsx';
-import { Button, SplitButton } from "@fluentui/react-components";
-import { Link } from "react-router-dom";
+import { SplitButton } from "@fluentui/react-components";
+import AuthService from "../../service/AuthService.jsx";
 
 const EmployerList = () => {
     const [projects, setProjects] = useState([]);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
-        ProjectService.getAll().then((response) => {
-            setProjects(response.data);
-        });
+        const load = async () => {
+            try {
+                const session = await AuthService.getSession();
+                setUser(session.data);
+
+                const favourites = await UserService.getFavourites(session.data.id);
+                setProjects(favourites.data);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        load();
     }, []);
+
+    if (!user) return <div>Loading...</div>;
 
     return (
         <div className="mx-32">
@@ -23,10 +36,10 @@ const EmployerList = () => {
                 </div>
             </div>
             <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4">
-                {projects.map((project) => (
+                {projects.map((record) => (
                     <EmployerCard
-                        key = {project.id}
-                        project = {project}
+                        key = {record.project.id}
+                        project = {record.project}
                     />
                 ))}
             </div>
