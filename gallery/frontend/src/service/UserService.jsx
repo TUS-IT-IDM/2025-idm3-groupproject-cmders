@@ -18,6 +18,15 @@ class UserService {
             withCredentials: true
         });
     }
+
+    unfavourite(user, project) {
+        return axios.delete(`http://localhost:8080/api/users/${user.id}/unfavourite/${project.id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        })
+    }
 }
 
 export default new UserService();

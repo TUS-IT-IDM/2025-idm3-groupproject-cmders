@@ -11,16 +11,39 @@ const EmployerCard = ({ project }) => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        AuthService.getSession()
-            .then(response => setUser(response.data))
-            .catch(() => {
-                window.location.href = "/login";
-            })
-    }, []);
+        const checkStatus = async () => {
+            try {
+                const session = await AuthService.getSession();
+                setUser(session.data);
 
-    const handleFavourite = () => {
-        setFavourite(!favourite);
-        UserService.favourite(user, project);
+                const favourites = await UserService.getFavourites(session.data.id);
+                const isFavourite = favourites.data.some(f => f.project.id === project.id);
+                setFavourite(isFavourite);
+
+            } catch (e) {
+                console.error("Error checking favourite status", e);
+            }
+        }
+
+        checkStatus();
+    }, [project.id]);
+
+    const handleFavourite = async () => {
+        // Optimistic update
+        const newFavouriteStatus = !favourite;
+        setFavourite(newFavouriteStatus);
+
+        try {
+            if (newFavouriteStatus) {
+                await UserService.favourite(user, project);
+            } else {
+                await UserService.unfavourite(user, project);
+            }
+        } catch (error) {
+            console.error("Failed to toggle favourite", error);
+            // Revert on failure
+            setFavourite(!newFavouriteStatus);
+        }
     }
 
     return (
