@@ -10,6 +10,17 @@ class AuthService {
         });
     }
 
+    register(formData) {
+  return fetch("http://localhost:8080/MainGallery/Register", {
+    method: "POST",
+    body: formData,                // no Content-Type header → browser sets multipart
+    credentials: "include"         // if you use sessions / cookies
+  }).then(r => {
+    if (!r.ok) throw new Error("Registration failed");
+    return r.json();
+  });
+}
+
     getSession() {
         return axios.get('http://localhost:8080/api/auth/session', {
             withCredentials: true
