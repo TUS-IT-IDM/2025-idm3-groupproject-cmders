@@ -1,9 +1,10 @@
 import React from 'react';
+import ProjectList from "./project/ProjectList.jsx";
 
 const Student = () => {
     return (
         <div>
-            <p>Student Dashboard</p>
+            <ProjectList />
         </div>
     );
 };

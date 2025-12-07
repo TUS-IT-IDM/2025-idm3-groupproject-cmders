@@ -1,5 +1,6 @@
 package idm3.project.gallery.controller;
 
+import idm3.project.gallery.model.File;
 import idm3.project.gallery.model.Project;
 import idm3.project.gallery.model.ShowcaseProject;
 import idm3.project.gallery.service.ProjectService;
@@ -30,14 +31,18 @@ public class ProjectController {
         return projectService.findOne(id).get();
     }
 
-    /*@GetMapping("/{id}/projects")
-    public List<ShowcaseProject> getProjects(@PathVariable("id") Integer id) {
-        return showcaseService.getProjects(id);
-    }*/
+    @GetMapping("/{id}/files")
+    public List<File> getFiles(@PathVariable("id") Integer id) {
+        return projectService.getFiles(id);
+    }
 
     @PostMapping
-    public void save(@RequestPart("project") Project project, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
-        projectService.save(project, file);
+    public void save(
+            @RequestPart("project") Project project,
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments
+        ) throws IOException {
+        projectService.save(project, image, attachments);
     }
 
     @DeleteMapping("/{id}")
