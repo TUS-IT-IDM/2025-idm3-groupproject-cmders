@@ -75,7 +75,7 @@ const Project = () => {
                 <h1 className="mt-4 mb-8">Description</h1>
                 <p className="mb-8">{project.description}</p>
                 <h2>Files</h2>
-                <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4 mb-40">
+                <div className="flex flex-row gap-4 mb-40">
                     {files.map((record) => (
                         <div className="flex justify-center items-center border-1 border-gray-400 p-2 rounded-2xl gap-2 w-fit mb-2 break-inside-avoid">
                         <div>{getFileIcon(record.filePath, record.type)}</div>
