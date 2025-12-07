@@ -44,6 +44,13 @@ public class UserService {
         favouriteProjectRepository.save(favourite);
     }
 
+    public void unfavourite(Integer userId, Integer projectId) {
+        var id = new FavouriteProjectId();
+        id.setUser(userId);
+        id.setProject(projectId);
+        favouriteProjectRepository.deleteById(id);
+    }
+
     // Authenticate user
     public User authenticate(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password);

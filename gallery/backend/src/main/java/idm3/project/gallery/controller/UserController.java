@@ -24,4 +24,9 @@ public class UserController {
     public void favourite(@PathVariable("id") Integer userId, @RequestBody Integer projectId) {
         userService.favourite(userId, projectId);
     }
+
+    @DeleteMapping("/{userId}/unfavourite/{projectId}")
+    public void unfavourite(@PathVariable("userId") Integer userId, @PathVariable("projectId") Integer projectId) {
+        userService.unfavourite(userId, projectId);
+    }
 }
