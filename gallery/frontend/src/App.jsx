@@ -10,6 +10,7 @@ import Showcase from "./components/showcase/Showcase.jsx";
 import ProjectList from "./components/project/ProjectList.jsx";
 import ProjectAdd from "./components/project/ProjectAdd.jsx";
 import Project from "./components/project/Project.jsx";
+import ProfileSettings from "./components/ProfileSettings.jsx";
 
 const App = () => {
     return (
@@ -17,6 +18,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path='/dashboard' element={<Dashboard />} />
+                <Route path='/profile-settings' element={<ProfileSettings />} />
                 <Route path="/showcase/:id" element={<Showcase />} />
                 <Route path="/showcase/:id/edit" element={<ShowcaseAdd />} />
                 <Route path="/showcase/add" element={<ShowcaseAdd />} />
