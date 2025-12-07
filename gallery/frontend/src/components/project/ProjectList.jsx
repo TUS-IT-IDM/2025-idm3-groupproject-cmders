@@ -15,7 +15,7 @@ const ProjectList = () => {
 
     return (
         <div className="mx-32">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-8">
                 <h2>Projects</h2>
                 <div className="flex items-center gap-4">
                     <Link to="/project/add">
@@ -29,7 +29,7 @@ const ProjectList = () => {
                     <SplitButton>Sort By</SplitButton>
                 </div>
             </div>
-            <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4">
+            <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-3 gap-8 mb-32">
                 {projects.map((project) => (
                     <ProjectCard
                         key = {project.id}

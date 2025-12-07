@@ -12,6 +12,8 @@ import { Button } from "@fluentui/react-components";
 import { FolderRegular, LeafTwoRegular, ConnectedRegular } from "@fluentui/react-icons";
 import ShowcaseService from "../service/ShowcaseService.jsx";
 import { Link } from "react-router-dom";
+import ProjectList from "./project/ProjectList.jsx";
+import Footer from "./Footer.jsx";
 
 const Home = () => {
     const [showcases, setShowcases] = useState([]);
@@ -114,6 +116,10 @@ const Home = () => {
             </div>
 
             {/*---- Recent Projects Section ----*/}
+            <ProjectList className="mb-8" />
+
+            {/*---- Footer ----*/}
+            <Footer />
         </>
     );
 };
