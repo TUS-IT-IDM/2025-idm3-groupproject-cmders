@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../Navbar.jsx";
 import { Button, Field, Input, Textarea } from "@fluentui/react-components";
 import ProjectService from "../../service/ProjectService.jsx";
+import AuthService from "../../service/AuthService.jsx";
 
 
 
@@ -17,6 +18,8 @@ const ProjectAdd = () => {
     const [created, setCreated] = useState('');
     const [modified, setModified] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
+    const [attachments, setAttachments] = useState([]);
+    const [user, setUser] = useState(null);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -34,6 +37,12 @@ const ProjectAdd = () => {
         }
     };
 
+    const handleAttachmentsChange = (e) => {
+        if (e.target.files) {
+            setAttachments(prev => [...prev, ...Array.from(e.target.files)])
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -43,20 +52,27 @@ const ProjectAdd = () => {
             description,
             descSummary,
             created,
-            modified
+            modified,
+            user
         };
 
-        ProjectService.save(project, selectedImage)
-            .then(() => navigate("/projects"))
+        ProjectService.save(project, selectedImage, attachments)
+            .then(() => navigate("/dashboard"))
             .catch(console.error);
     };
 
     useEffect(() => {
+        AuthService.getSession()
+            .then(response => setUser(response.data))
+            .catch (() => {
+                window.location.href = "/login";
+            })
+
         if (id) {
             ProjectService.get(id).then(response => {
                 setTitle(response.data.title);
                 setDescription(response.data.description);
-                setDescSummary(response.data.descSummmary);
+                setDescSummary(response.data.descSummary);
                 setCreated(response.data.created);
                 setModified(response.data.modified);
                 setImagePreview(`http://localhost:8080/assets/images/projects/${response.data.heroImage}`);
@@ -64,7 +80,7 @@ const ProjectAdd = () => {
             })
         }
 
-    }, );
+    }, []);
 
     return (
         <div className="flex flex-col h-screen">
@@ -102,8 +118,21 @@ const ProjectAdd = () => {
                                 onChange={(e) => setDescSummary(e.target.value)}
                             />
                         </Field>
-                        <div className="flex-1">
-                            {/*Filler*/}
+                        <Field label="Project Files">
+                            <Input
+                                type="file"
+                                multiple
+                                onChange={handleAttachmentsChange}
+                            />
+                        </Field>
+                        <div className="mt-2 text-sm text-gray-600 flex-1">
+                            {attachments.length > 0 && (
+                                <ul className="list-disc pl-5">
+                                    {attachments.map((file, index) => (
+                                        <li key={index}>{file.name}</li>
+                                    ))}
+                                </ul>
+                            )}
                         </div>
                         <Field label="Created">
                             <Input
