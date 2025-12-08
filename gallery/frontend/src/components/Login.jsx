@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import { Button, Field, Input } from "@fluentui/react-components";
 import AuthService from "../service/AuthService.jsx";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext.jsx";
 
 const Login = () => {
+    const { checkSession } = useUser();
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
@@ -18,7 +20,10 @@ const Login = () => {
         };
 
         AuthService.login(user)
-            .then(() => navigate("/dashboard"))
+            .then(async () => {
+                await checkSession();
+                navigate("/dashboard");
+            })
             .catch(console.error);
     }
 

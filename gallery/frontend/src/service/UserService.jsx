@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 class UserService {
-    getFavourites(id) {
-        return axios.get(`http://localhost:8080/api/users/${id}/favourites`, {
+    getFavourites(user) {
+        return axios.get(`http://localhost:8080/api/users/${user.id}/favourites`, {
             headers: {
                 'Content-Type': 'application/json'
             },

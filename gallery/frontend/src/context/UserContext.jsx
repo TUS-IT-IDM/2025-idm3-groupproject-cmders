@@ -7,22 +7,25 @@ export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+    const checkSession = () => {
+        setLoading(true);
         AuthService.getSession()
             .then(response => {
                 setUser(response.data);
                 setLoading(false);
             })
             .catch(() => {
+                setUser(null);
                 setLoading(false);
-                if (window.location.pathname !== "/login" && window.location.pathname !== "/signup" && window.location.pathname !== "/") {
-                    window.location.href = "/login";
-                }
             });
+    };
+
+    useEffect(() => {
+        checkSession();
     }, []);
 
     return (
-        <UserContext.Provider value={{ user, setUser, loading }}>
+        <UserContext.Provider value={{ user, setUser, loading, checkSession }}>
             {children}
         </UserContext.Provider>
     )

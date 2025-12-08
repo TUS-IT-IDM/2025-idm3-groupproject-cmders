@@ -6,11 +6,13 @@ import ProjectCard from "./ProjectCard.jsx";
 import {Button} from "@fluentui/react-components";
 import {DocumentRegular, DocumentPdfRegular, ImageRegular, MusicNote2Regular, VideoClipRegular} from "@fluentui/react-icons";
 import {SplitButton} from "@fluentui/react-components";
+import {useUser} from "../../context/UserContext.jsx";
 
 const Project = () => {
     const { id } = useParams();
     const [project, setProject] = useState(null);
     const [files, setFiles] = useState([]);
+    const { user, loading } = useUser();
 
     useEffect(() => {
         ProjectService.get(id).then((response) => {
@@ -23,7 +25,7 @@ const Project = () => {
         })
     }, [id]);
 
-    if (!project) return <div>Loading...</div>;
+    if (!project || loading) return <div>Loading...</div>;
 
     const getFileIcon = (fileName, fileType) => {
         let type = fileType;
@@ -71,17 +73,17 @@ const Project = () => {
                         <p>Created: {project.created}</p>
                         <p>Modified: {project.modified}</p>
                     </div>
-                    <SplitButton
+                    {project.user.id === user?.id && <SplitButton
                         appearance="primary"
                         primaryActionButton={{
-                            style: { backgroundColor: '#9C0D38', color: 'white' }
+                            style: {backgroundColor: '#9C0D38', color: 'white'}
                         }}
                         menuButton={{
-                            style: { backgroundColor: '#9C0D38', color: 'white' }
+                            style: {backgroundColor: '#9C0D38', color: 'white'}
                         }}
                     >
                         Add to Showcase
-                    </SplitButton>
+                    </SplitButton>}
                 </div>
                 <h1 className="mt-4 mb-8">Description</h1>
                 <p className="mb-8">{project.description}</p>
