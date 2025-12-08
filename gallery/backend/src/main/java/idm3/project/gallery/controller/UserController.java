@@ -20,8 +20,8 @@ public class UserController {
         return userService.getFavourites(id);
     }
 
-    @PostMapping("/{id}/favourite")
-    public void favourite(@PathVariable("id") Integer userId, @RequestBody Integer projectId) {
+    @PostMapping("/{userId}/favourite/{projectId}")
+    public void favourite(@PathVariable("userId") Integer userId, @PathVariable("projectId") Integer projectId) {
         userService.favourite(userId, projectId);
     }
 

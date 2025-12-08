@@ -11,7 +11,7 @@ class UserService {
     }
 
     favourite(user, project) {
-        return axios.post(`http://localhost:8080/api/users/${user.id}/favourite`, project.id, {
+        return axios.post(`http://localhost:8080/api/users/${user.id}/favourite/${project.id}`, {
             headers: {
                 'Content-Type': 'application/json'
             },
