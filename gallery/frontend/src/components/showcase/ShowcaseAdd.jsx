@@ -4,12 +4,14 @@ import Navbar from "../Navbar.jsx";
 import { Button, Field, Input, Textarea } from "@fluentui/react-components";
 import ShowcaseService from "../../service/ShowcaseService.jsx";
 import ThemeService from "../../service/ThemeService.jsx";
+import { useUser } from "../../context/UserContext.jsx";
 
 
 const ShowcaseAdd = () => {
+    const { user, loading } = useUser();
     const navigate = useNavigate();
-    const { id } = useParams();
 
+    const { id } = useParams();
     const [imagePreview, setImagePreview] = useState();
     const [title, setTitle] = useState('');
     const [themes, setThemes] = useState([]);
@@ -48,11 +50,15 @@ const ShowcaseAdd = () => {
         };
 
         ShowcaseService.save(showcase, selectedFile)
-            .then(() => navigate("/showcases"))
+            .then(() => navigate("/dashboard"))
             .catch(console.error);
     };
 
     useEffect(() => {
+        if (user?.type !== "Admin") {
+            navigate("/dashboard");
+        }
+
         if (id) {
             ShowcaseService.get(id).then(response => {
                 setTitle(response.data.title);
@@ -69,6 +75,10 @@ const ShowcaseAdd = () => {
             setThemes(response.data);
         });
     }, []);
+
+    if (loading) return <div>Loading...</div>;
+
+    if (!user) return null;
 
     return (
         <div className="flex flex-col h-screen">

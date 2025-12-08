@@ -5,6 +5,9 @@ import idm3.project.gallery.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -13,6 +16,12 @@ public class AuthController {
 
     public AuthController(UserService userService) {
         this.userService = userService;
+    }
+
+    // Register
+    @PostMapping("/register")
+    public void register(@RequestPart("user") User user, @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) throws IOException {
+        userService.save(user, profilePicture);
     }
 
     // Login
@@ -35,7 +44,7 @@ public class AuthController {
 
     // Check Session
     @GetMapping("/session")
-    public ResponseEntity<?> checkSession(HttpSession session) {
+    public ResponseEntity<?> getSession(HttpSession session) {
         User user = (User) session.getAttribute("loggedInUser");
 
         if (user == null) {

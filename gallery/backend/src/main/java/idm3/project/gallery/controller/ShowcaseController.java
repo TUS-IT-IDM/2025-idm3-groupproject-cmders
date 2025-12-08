@@ -23,7 +23,7 @@ public class ShowcaseController {
 
     @GetMapping({"/{id}"})
     public Showcase get(@PathVariable("id") Integer id) {
-        return showcaseService.findOne(id).get();
+        return showcaseService.get(id).get();
     }
 
     @GetMapping
@@ -34,6 +34,11 @@ public class ShowcaseController {
     @GetMapping("/{id}/projects")
     public List<ShowcaseProject> getProjects(@PathVariable("id") Integer id) {
         return showcaseService.getProjects(id);
+    }
+
+    @PostMapping("/{showcaseId}/add/{projectId}")
+    public void addProject(@PathVariable("showcaseId") Integer showcaseId, @PathVariable("projectId") Integer projectId) {
+        showcaseService.addProject(showcaseId, projectId);
     }
 
     @PostMapping

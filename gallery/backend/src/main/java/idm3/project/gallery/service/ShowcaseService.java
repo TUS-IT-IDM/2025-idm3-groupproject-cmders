@@ -2,6 +2,8 @@ package idm3.project.gallery.service;
 
 import idm3.project.gallery.model.Showcase;
 import idm3.project.gallery.model.ShowcaseProject;
+import idm3.project.gallery.model.ShowcaseProjectId;
+import idm3.project.gallery.repository.ProjectRepository;
 import idm3.project.gallery.repository.ShowcaseProjectRepository;
 import idm3.project.gallery.repository.ShowcaseRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,6 +25,8 @@ public class ShowcaseService {
     @Autowired
     private ShowcaseRepository showcaseRepository;
     @Autowired
+    private ProjectRepository projectRepository;
+    @Autowired
     private ShowcaseProjectRepository showcaseProjectRepository;
 
     public List<Showcase> findAll() {
@@ -33,7 +37,25 @@ public class ShowcaseService {
         return showcaseProjectRepository.findByShowcase_Id(showcaseId);
     }
 
-    public Optional<Showcase> findOne(Integer showcase) {
+    public void addProject(Integer showcaseId, Integer projectId) {
+        var showcase = showcaseRepository.findById(showcaseId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + showcaseId));
+        var project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectId));
+
+        var id = new ShowcaseProjectId();
+        id.setShowcase(showcaseId);
+        id.setProject(projectId);
+
+        var showcaseProject = new ShowcaseProject();
+        showcaseProject.setId(id);
+        showcaseProject.setShowcase(showcase);
+        showcaseProject.setProject(project);
+
+        showcaseProjectRepository.save(showcaseProject);
+    }
+
+    public Optional<Showcase> get(Integer showcase) {
         return showcaseRepository.findById(showcase);
     }
 
@@ -42,7 +64,7 @@ public class ShowcaseService {
 
         // Case 1: Update existing
         if (incoming.getId() != null) {
-            showcase = findOne(incoming.getId())
+            showcase = get(incoming.getId())
                     .orElseThrow(() -> new EntityNotFoundException("Showcase not found with id: " + incoming.getId()));
         }
         // Case 2: Create new
@@ -81,39 +103,7 @@ public class ShowcaseService {
         return fileName;
     }
 
-    public void update(Showcase updatedShowcase, MultipartFile file) throws IOException {
-        Optional<Showcase> existingShowcase = showcaseRepository.findById(updatedShowcase.getId());
-        if (existingShowcase.isPresent()) {
-            Showcase showcase = existingShowcase.get();
-            showcase.setTheme(updatedShowcase.getTheme());
-            showcase.setTitle(updatedShowcase.getTitle());
-            showcase.setStart(updatedShowcase.getStart());
-            showcase.setEnd(updatedShowcase.getEnd());
-            showcase.setDescription(updatedShowcase.getDescription());
-            showcase.setStatus(updatedShowcase.getStatus());
-            /*showcase.setHeroImage(updatedShowcase.getHeroImage());*/
-            String fileName = updatedShowcase.getHeroImage();
-            if (!file.isEmpty()) {
-                Files.createDirectories(Paths.get(UPLOAD_DIR));
-                fileName = file.getOriginalFilename();
-                Path filePath = Paths.get(UPLOAD_DIR + fileName);
-                Files.write(filePath, file.getBytes());
-                showcase.setHeroImage(fileName);
-            }
-            showcaseRepository.save(showcase);
-        } else {
-            throw new EntityNotFoundException("Showcase not found with id: " + updatedShowcase.getId());
-        }
-    }
-
     public void delete(Integer showcase) {
         showcaseRepository.deleteById(showcase);
-    }
-
-    public List<Showcase> search(String keyword) {
-        if (keyword == null || keyword.isEmpty()) {
-            return findAll();
-        }
-        return showcaseRepository.findByTheme_NameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword, keyword);
     }
 }

@@ -2,15 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ProjectService from '../../service/ProjectService.jsx';
 import Navbar from "../Navbar.jsx";
-import ProjectCard from "./ProjectCard.jsx";
-import {Button} from "@fluentui/react-components";
 import {DocumentRegular, DocumentPdfRegular, ImageRegular, MusicNote2Regular, VideoClipRegular} from "@fluentui/react-icons";
-import {SplitButton} from "@fluentui/react-components";
+import {Menu, MenuItem, MenuList, MenuPopover, MenuTrigger, SplitButton} from "@fluentui/react-components";
+import {useUser} from "../../context/UserContext.jsx";
+import ShowcaseService from "../../service/ShowcaseService.jsx";
 
 const Project = () => {
+    const { user, loading } = useUser();
+
     const { id } = useParams();
     const [project, setProject] = useState(null);
     const [files, setFiles] = useState([]);
+    const [showcases, setShowcases] = useState([]);
 
     useEffect(() => {
         ProjectService.get(id).then((response) => {
@@ -19,11 +22,38 @@ const Project = () => {
 
         ProjectService.getFiles(id).then((response) => {
             setFiles(response.data);
-            console.log(response.data);
+        })
+
+        ShowcaseService.getAll().then((response) => {
+            const now = new Date();
+            const showcases = response.data.filter(showcase => {
+                const start = new Date(showcase.start);
+                const end = new Date(showcase.end);
+                return now >= start && now <= end;
+            });
+            setShowcases(showcases);
         })
     }, [id]);
 
-    if (!project) return <div>Loading...</div>;
+    const addToShowcase = (showcase) => {
+        ShowcaseService.addProject(showcase, project)
+            .then(() => {
+                alert("Project added to showcase successfully!");
+            })
+            .catch(error => {
+                console.error("Failed to add project to showcase", error);
+                alert("Failed to add project to showcase.");
+            })
+    }
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-UK', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    }
 
     const getFileIcon = (fileName, fileType) => {
         let type = fileType;
@@ -46,6 +76,8 @@ const Project = () => {
         }
     }
 
+    if (!project || loading) return <div>Loading...</div>;
+
     return (
         <>
             <Navbar />
@@ -66,31 +98,53 @@ const Project = () => {
             </div>
 
             <div className="mx-32">
-                <div className="flex justify-between items-center mt-8 mb-8" style={{color: '#9C0D38'}}>
+                <div className="flex justify-between items-center my-8" style={{color: '#9C0D38'}}>
                     <div>
-                        <p>Created: {project.created}</p>
-                        <p>Modified: {project.modified}</p>
+                        <p>Created: {formatDate(project.created)}</p>
+                        <p>Modified: {formatDate(project.modified)}</p>
                     </div>
-                    <SplitButton
-                        appearance="primary"
-                        primaryActionButton={{
-                            style: { backgroundColor: '#9C0D38', color: 'white' }
-                        }}
-                        menuButton={{
-                            style: { backgroundColor: '#9C0D38', color: 'white' }
-                        }}
-                    >
-                        Add to Showcase
-                    </SplitButton>
+                    {project.user.id === user?.id && (
+                        <Menu>
+                            <MenuTrigger disableButtonEnhancement>
+                                <SplitButton
+                                    appearance="primary"
+                                    primaryActionButton={{
+                                        style: {backgroundColor: '#9C0D38', color: 'white'}
+                                    }}
+                                    menuButton={{
+                                        style: {backgroundColor: '#9C0D38', color: 'white'}
+                                    }}
+                                >
+                                    Add to Showcase
+                                </SplitButton>
+                            </MenuTrigger>
+                            <MenuPopover>
+                                <MenuList>
+                                    {showcases.length > 0 ? (
+                                        showcases.map(showcase => (
+                                            <MenuItem
+                                                key={showcase.id}
+                                                onClick={() => addToShowcase(showcase)}
+                                            >
+                                                {showcase.title}
+                                            </MenuItem>
+                                        ))
+                                    ) : (
+                                        <MenuItem disabled>No active showcases</MenuItem>
+                                    )}
+                                </MenuList>
+                            </MenuPopover>
+                        </Menu>
+                    )}
                 </div>
                 <h1 className="mt-4 mb-8">Description</h1>
                 <p className="mb-8">{project.description}</p>
                 <h2>Files</h2>
                 <div className="flex flex-row gap-4 mb-40">
                     {files.map((record) => (
-                        <div className="flex justify-center items-center border-1 border-gray-400 p-2 rounded-2xl gap-2 w-fit mb-2 break-inside-avoid">
-                        <div>{getFileIcon(record.filePath, record.type)}</div>
-                        <p>{record.filePath}</p>
+                        <div className="flex justify-center items-center border-1 border-gray-400 p-2 rounded-2xl gap-2 w-fit mb-2 break-inside-avoid" key={record.id}>
+                            <div>{getFileIcon(record.filePath, record.type)}</div>
+                            <p>{record.filePath}</p>
                         </div>
                     ))}
                 </div>

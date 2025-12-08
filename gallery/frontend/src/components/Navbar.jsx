@@ -10,25 +10,23 @@ import {
     MenuItem,
     Button,
 } from "@fluentui/react-components"
+import {useUser} from "../context/UserContext.jsx";
 
 const Navbar = () => {
-    const [user, setUser] = useState(null);
+    const { user, loading, checkSession } = useUser();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        AuthService.getSession()
-            .then(response => setUser(response.data))
-            .catch(() => setUser(null));
-    }, []);
 
     const handleLogout = async () => {
         try {
             await AuthService.logout();
+            await checkSession();
             navigate('/');
         } catch (error) {
             console.error('Logout failed: ', error);
         }
     };
+
+    if (loading) return <div>Loading...</div>;
 
     return (
         <header className="flex justify-between items-center border-b-1 border-gray-400 sticky top-0 z-50 bg-white">
