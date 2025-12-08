@@ -1,9 +1,8 @@
 import React from 'react'
 import Navbar from "./Navbar.jsx";
-import Student from "./Student.jsx";
-import Employer from "./Employer.jsx";
-import Admin from "./Admin.jsx";
 import { useUser } from "../context/UserContext.jsx";
+import ProjectList from "./project/ProjectList.jsx";
+import ShowcaseList from "./showcase/ShowcaseList.jsx";
 
 const Dashboard = () => {
     const { user, loading } = useUser();
@@ -22,9 +21,8 @@ const Dashboard = () => {
                 </div>
                 <img src="/tile-pattern.svg" alt="Tile Pattern" className="w-auto max-h-[300px] mt-4 mb-8"/>
             </div>
-            {user.type === 'Student' && <Student />}
-            {user.type === 'Employer' && <Employer />}
-            {user.type === 'Admin' && <Admin />}
+            {(user.type === 'Student' || user.type === 'Employer') && <ProjectList variant="dashboard" />}
+            {user.type === 'Admin' && <ShowcaseList />}
             {(!['Student', 'Employer', 'Admin'].includes(user.type)) && <div>Error...</div>}
         </>
     );

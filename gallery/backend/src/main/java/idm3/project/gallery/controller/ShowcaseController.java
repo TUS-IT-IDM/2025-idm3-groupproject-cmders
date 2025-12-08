@@ -23,7 +23,7 @@ public class ShowcaseController {
 
     @GetMapping({"/{id}"})
     public Showcase get(@PathVariable("id") Integer id) {
-        return showcaseService.findOne(id).get();
+        return showcaseService.get(id).get();
     }
 
     @GetMapping

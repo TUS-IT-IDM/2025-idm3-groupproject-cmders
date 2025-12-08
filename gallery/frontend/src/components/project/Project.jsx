@@ -6,8 +6,11 @@ import ProjectCard from "./ProjectCard.jsx";
 import {Button} from "@fluentui/react-components";
 import {DocumentRegular, DocumentPdfRegular, ImageRegular, MusicNote2Regular, VideoClipRegular} from "@fluentui/react-icons";
 import {SplitButton} from "@fluentui/react-components";
+import {useUser} from "../../context/UserContext.jsx";
 
 const Project = () => {
+    const { user, loading } = useUser();
+
     const { id } = useParams();
     const [project, setProject] = useState(null);
     const [files, setFiles] = useState([]);
@@ -23,7 +26,14 @@ const Project = () => {
         })
     }, [id]);
 
-    if (!project) return <div>Loading...</div>;
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-UK', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    }
 
     const getFileIcon = (fileName, fileType) => {
         let type = fileType;
@@ -46,6 +56,8 @@ const Project = () => {
         }
     }
 
+    if (!project || loading) return <div>Loading...</div>;
+
     return (
         <>
             <Navbar />
@@ -66,22 +78,22 @@ const Project = () => {
             </div>
 
             <div className="mx-32">
-                <div className="flex justify-between items-center mt-8 mb-8" style={{color: '#9C0D38'}}>
+                <div className="flex justify-between items-center my-8" style={{color: '#9C0D38'}}>
                     <div>
-                        <p>Created: {project.created}</p>
-                        <p>Modified: {project.modified}</p>
+                        <p>Created: {formatDate(project.created)}</p>
+                        <p>Modified: {formatDate(project.modified)}</p>
                     </div>
-                    <SplitButton
+                    {project.user.id === user?.id && <SplitButton
                         appearance="primary"
                         primaryActionButton={{
-                            style: { backgroundColor: '#9C0D38', color: 'white' }
+                            style: {backgroundColor: '#9C0D38', color: 'white'}
                         }}
                         menuButton={{
-                            style: { backgroundColor: '#9C0D38', color: 'white' }
+                            style: {backgroundColor: '#9C0D38', color: 'white'}
                         }}
                     >
                         Add to Showcase
-                    </SplitButton>
+                    </SplitButton>}
                 </div>
                 <h1 className="mt-4 mb-8">Description</h1>
                 <p className="mb-8">{project.description}</p>

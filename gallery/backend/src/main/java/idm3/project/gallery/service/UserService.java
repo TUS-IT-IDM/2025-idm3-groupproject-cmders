@@ -1,7 +1,6 @@
 package idm3.project.gallery.service;
 import idm3.project.gallery.model.FavouriteProject;
 import idm3.project.gallery.model.FavouriteProjectId;
-import idm3.project.gallery.model.Showcase;
 import idm3.project.gallery.model.User;
 import idm3.project.gallery.repository.FavouriteProjectRepository;
 import idm3.project.gallery.repository.ProjectRepository;
@@ -33,7 +32,9 @@ public class UserService {
         return userRepository.findById(user);
     }
 
-    public List<User> findAll() { return userRepository.findAll(); }
+    public User authenticate(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password);
+    }
 
     public List<FavouriteProject> getFavourites(Integer id) {
         return favouriteProjectRepository.findByUser_Id(id);
@@ -62,10 +63,6 @@ public class UserService {
         id.setUser(userId);
         id.setProject(projectId);
         favouriteProjectRepository.deleteById(id);
-    }
-
-    public User authenticate(String email, String password) {
-        return userRepository.findByEmailAndPassword(email, password);
     }
 
     public void save(User incoming, MultipartFile file) throws IOException {

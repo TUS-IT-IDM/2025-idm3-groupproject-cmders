@@ -3,14 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../Navbar.jsx";
 import { Button, Field, Input, Textarea } from "@fluentui/react-components";
 import ProjectService from "../../service/ProjectService.jsx";
-import AuthService from "../../service/AuthService.jsx";
-
-
+import { useUser } from "../../context/UserContext.jsx";
 
 const ProjectAdd = () => {
+    const { user, loading } = useUser();
     const navigate = useNavigate();
-    const { id } = useParams();
 
+    const { id } = useParams();
     const [imagePreview, setImagePreview] = useState();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState([]);
@@ -19,7 +18,6 @@ const ProjectAdd = () => {
     const [modified, setModified] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
     const [attachments, setAttachments] = useState([]);
-    const [user, setUser] = useState(null);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -62,12 +60,6 @@ const ProjectAdd = () => {
     };
 
     useEffect(() => {
-        AuthService.getSession()
-            .then(response => setUser(response.data))
-            .catch (() => {
-                window.location.href = "/login";
-            })
-
         if (id) {
             ProjectService.get(id).then(response => {
                 setTitle(response.data.title);
@@ -77,10 +69,18 @@ const ProjectAdd = () => {
                 setModified(response.data.modified);
                 setImagePreview(`http://localhost:8080/assets/images/projects/${response.data.heroImage}`);
                 setSelectedImage(response.data.heroImage);
-            })
-        }
 
+                // Prevent users from editing other users' projects'
+                if (user.id !== response.data.user.id || user.type === "Employer") {
+                    navigate("/dashboard");
+                }
+            });
+        }
     }, []);
+
+    if (loading) return <div>Loading...</div>;
+
+    if (!user) return null;
 
     return (
         <div className="flex flex-col h-screen">
