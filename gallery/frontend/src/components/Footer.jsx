@@ -9,7 +9,7 @@ const footer = () => {
         {/* Left: logo + copyright, aligned to same vertical line as headings */}
         <div className="flex flex-col items-start gap-2">
           <img
-            src="/mosaic.svg"
+            src="/mosaic-white.svg"
             alt="Mosaic Logo"
             className="h-16 w-auto"
           />

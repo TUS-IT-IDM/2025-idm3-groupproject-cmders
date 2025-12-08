@@ -30,6 +30,15 @@ class ShowcaseService {
         });
     }
 
+    addProject(showcase, project) {
+        return axios.post(`http://localhost:8080/api/showcases/${showcase.id}/add/${project.id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        });
+    }
+
     save(showcase, file) {
         const formData = new FormData();
         formData.append('showcase', new Blob([JSON.stringify(showcase)], { type: 'application/json' }));

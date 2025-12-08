@@ -36,6 +36,11 @@ public class ShowcaseController {
         return showcaseService.getProjects(id);
     }
 
+    @PostMapping("/{showcaseId}/add/{projectId}")
+    public void addProject(@PathVariable("showcaseId") Integer showcaseId, @PathVariable("projectId") Integer projectId) {
+        showcaseService.addProject(showcaseId, projectId);
+    }
+
     @PostMapping
     public void save(@RequestPart("showcase") Showcase showcase, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
         showcaseService.save(showcase, file);

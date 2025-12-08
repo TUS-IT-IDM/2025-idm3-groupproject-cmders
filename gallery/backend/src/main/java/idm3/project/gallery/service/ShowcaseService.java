@@ -2,6 +2,8 @@ package idm3.project.gallery.service;
 
 import idm3.project.gallery.model.Showcase;
 import idm3.project.gallery.model.ShowcaseProject;
+import idm3.project.gallery.model.ShowcaseProjectId;
+import idm3.project.gallery.repository.ProjectRepository;
 import idm3.project.gallery.repository.ShowcaseProjectRepository;
 import idm3.project.gallery.repository.ShowcaseRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,6 +25,8 @@ public class ShowcaseService {
     @Autowired
     private ShowcaseRepository showcaseRepository;
     @Autowired
+    private ProjectRepository projectRepository;
+    @Autowired
     private ShowcaseProjectRepository showcaseProjectRepository;
 
     public List<Showcase> findAll() {
@@ -31,6 +35,24 @@ public class ShowcaseService {
 
     public List<ShowcaseProject> getProjects(Integer showcaseId) {
         return showcaseProjectRepository.findByShowcase_Id(showcaseId);
+    }
+
+    public void addProject(Integer showcaseId, Integer projectId) {
+        var showcase = showcaseRepository.findById(showcaseId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + showcaseId));
+        var project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectId));
+
+        var id = new ShowcaseProjectId();
+        id.setShowcase(showcaseId);
+        id.setProject(projectId);
+
+        var showcaseProject = new ShowcaseProject();
+        showcaseProject.setId(id);
+        showcaseProject.setShowcase(showcase);
+        showcaseProject.setProject(project);
+
+        showcaseProjectRepository.save(showcaseProject);
     }
 
     public Optional<Showcase> get(Integer showcase) {
