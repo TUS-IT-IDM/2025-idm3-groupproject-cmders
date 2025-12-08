@@ -12,6 +12,8 @@ import ProjectAdd from "./components/project/ProjectAdd.jsx";
 import Project from "./components/project/Project.jsx";
 import ProfileSettings from "./components/ProfileSettings.jsx";
 import Footer from "./components/footer.jsx";
+import About from './components/About.jsx';
+import Contact from './components/Contact.jsx';
 
 const App = () => {
     return (
@@ -26,6 +28,8 @@ const App = () => {
                         <Route path="/showcase/:id" element={<Showcase />} />
                         <Route path="/showcase/:id/edit" element={<ShowcaseAdd />} />
                         <Route path="/showcase/add" element={<ShowcaseAdd />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/contact" element={<Contact />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/signup" element={<Signup />} />
                         <Route path="/project/list" element={<ProjectList />} />
