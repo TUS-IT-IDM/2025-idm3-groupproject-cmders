@@ -42,6 +42,7 @@ const Navbar = () => {
                 <a href="/contact" className="py-[24px] px-[20px]">Contact</a>
 
                 {!user && <a href="/login" className="py-[24px] px-[20px]">Login</a>}
+                {!user && <a href="/signup" className="py-[24px] px-[20px]">Signup</a>}
                 {user && (
                     <Menu>
                         <MenuTrigger disableButtonEnhancement>
