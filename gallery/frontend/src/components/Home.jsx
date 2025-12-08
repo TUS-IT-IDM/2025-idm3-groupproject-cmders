@@ -22,7 +22,13 @@ const Home = () => {
     useEffect(() => {
         ShowcaseService.getAll()
             .then(response => {
-                setShowcases(response.data);
+                const now = new Date();
+                const active = response.data.filter(showcase => {
+                    const start = new Date(showcase.start);
+                    const end = new Date(showcase.end);
+                    return now >= start && now <= end;
+                });
+                setShowcases(active);
             });
     }, []);
 

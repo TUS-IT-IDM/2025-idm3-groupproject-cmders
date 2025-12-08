@@ -6,7 +6,6 @@ import { Button, SplitButton } from "@fluentui/react-components";
 import { Link } from "react-router-dom";
 import { useUser } from "../../context/UserContext.jsx";
 
-// Accept a 'variant' prop: "dashboard" or "public" (default)
 const ProjectList = ({ variant = "all" }) => {
     const { user, loading } = useUser();
     const [projects, setProjects] = useState([]);
@@ -48,7 +47,7 @@ const ProjectList = ({ variant = "all" }) => {
         if (!loading) {
             fetchProjects();
         }
-    }, [user, loading, variant]); // Add variant to dependencies
+    }, [user, loading, variant]);
 
     if (loading) return <div>Loading...</div>;
 

@@ -65,6 +65,7 @@ const ProjectCard = ({ project }) => {
                 <p>{project.descSummary}</p>
                 <p><strong>by {project.user.firstName + " " + project.user.lastName}</strong></p>
                 <div className="mt-4 gap-2 flex justify-start items-center w-full">
+                    {/*Everyone can view*/}
                     <Link to={"/project/" + project.id}>
                         <Button
                             appearance="primary"
@@ -80,19 +81,19 @@ const ProjectCard = ({ project }) => {
                         <Button
                             appearance="outline"
                             href={"/project/" + project.id}
-                            icon={<EditRegular className="size-4"/>}
+                            icon={<EditRegular className="size-4" />}
                         />
                     </Link>}
-
+                    {/*Student & Admin can delete*/}
                     {(project.user.id === user?.id || user?.type === 'Admin') && <Button
                         appearance="outline"
                         href={"/project/" + project.id}
                         onClick={handleDelete}
-                        icon={<DeleteRegular className="size-4"/>}
-                    >
-                    </Button>}
+                        icon={<DeleteRegular className="size-4" />}
+                    />}
+                    {/*Employer can favourite*/}
                     {user?.type === 'Employer' && <Button
-                        icon={favourite ? <Heart24Filled/> : <Heart24Regular/>}
+                        icon={favourite ? <Heart24Filled className="size-4" /> : <Heart24Regular className="size-4" />}
                         aria-label="Favourite"
                         onClick={handleFavourite}
                     />}

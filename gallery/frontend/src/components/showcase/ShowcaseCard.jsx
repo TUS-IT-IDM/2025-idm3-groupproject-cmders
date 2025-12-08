@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { Button } from '@fluentui/react-components'
 import ShowcaseService from "../../service/ShowcaseService.jsx";
+import {DeleteRegular, EditRegular} from "@fluentui/react-icons";
 
 const ShowcaseCard = ({ showcase }) => {
     const handleDelete = () => {
@@ -40,22 +41,20 @@ const ShowcaseCard = ({ showcase }) => {
                             View
                         </Button>
                     </Link>
+                    <div className="flex-1"></div>
                     <Link to={`/showcase/${showcase.id}/edit`}>
                         <Button
                             appearance="outline"
                             href={"/showcase/" + showcase.id}
-                        >
-                            Edit
-                        </Button>
+                            icon={<EditRegular className="size-4" />}
+                        />
                     </Link>
                     <Button
-                        appearance="primary"
+                        appearance="outline"
                         href={"/showcase/" + showcase.id}
                         onClick={handleDelete}
-                        style={{ backgroundColor: '#9C0D38', color: 'white'}}
-                    >
-                        Delete
-                    </Button>
+                        icon={<DeleteRegular className="size-4" />}
+                    />
                 </div>
             </div>
         </div>

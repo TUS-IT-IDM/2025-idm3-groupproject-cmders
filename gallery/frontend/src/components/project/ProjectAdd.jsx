@@ -7,8 +7,8 @@ import { useUser } from "../../context/UserContext.jsx";
 
 const ProjectAdd = () => {
     const { user, loading } = useUser();
-
     const navigate = useNavigate();
+
     const { id } = useParams();
     const [imagePreview, setImagePreview] = useState();
     const [title, setTitle] = useState('');
