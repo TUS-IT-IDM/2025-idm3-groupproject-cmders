@@ -41,11 +41,10 @@ const Signup = () => {
                 firstName,
                 lastName,
                 email,
-                password,
-                profilePicture
+                password
             };
     
-            AuthService.register(user)
+            AuthService.register(user, profilePicture)
                 .then(() => navigate("/login"))
                 .catch(console.error);
         };

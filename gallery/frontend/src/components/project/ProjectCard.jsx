@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@fluentui/react-components'
 import ProjectService from "../../service/ProjectService.jsx";
@@ -21,7 +21,7 @@ const ProjectCard = ({ project }) => {
             <div className="p-4">
                 <h3>{project.title}</h3>
                 <p>{project.descSummary}</p>
-                <p><strong>by {project.user?.firstName + " " + project.user?.lastName}</strong></p>
+                <p><strong>by {project.user.firstName + " " + project.user.lastName}</strong></p>
                 <div className="mt-4 gap-2 flex justify-start items-center w-full">
                     <Link to={"/project/" + project.id}>
                         <Button
@@ -32,6 +32,7 @@ const ProjectCard = ({ project }) => {
                             View
                         </Button>
                     </Link>
+                    <div className="flex-1"></div>
                     <Link to={`/project/${project.id}/edit`}>
                         <Button
                             appearance="outline"
