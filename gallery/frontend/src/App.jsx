@@ -11,7 +11,7 @@ import ProjectList from "./components/project/ProjectList.jsx";
 import ProjectAdd from "./components/project/ProjectAdd.jsx";
 import Project from "./components/project/Project.jsx";
 import ProfileSettings from "./components/ProfileSettings.jsx";
-import Footer from "./components/footer.jsx";
+import Footer from "./components/Footer.jsx";
 import About from './components/About.jsx';
 import Contact from './components/Contact.jsx';
 
