@@ -153,10 +153,10 @@ const ProjectAdd = () => {
                                     className="w-full h-auto object-cover"
                                 />
                             ) : (
-                                <span className="text-gray-500">Image Preview</span>
+                                <span className="text-gray-500 mx-8">Cover Image Preview</span>
                             )}
                         </div>
-                        <Field label="Upload Image">
+                        <Field label="Upload Cover Image">
                             <Input
                                 type="file"
                                 required={!id} // only required when creating
