@@ -39,7 +39,6 @@ const App = () => {
                     </Routes>
                 </main>
 
-                {/* Footer appears on every page */}
                 <Footer />
             </div>
         </Router>
