@@ -3,6 +3,7 @@ import Navbar from "./Navbar.jsx";
 import { useUser } from "../context/UserContext.jsx";
 import ProjectList from "./project/ProjectList.jsx";
 import ShowcaseList from "./showcase/ShowcaseList.jsx";
+import Footer from "./Footer.jsx";
 
 const Dashboard = () => {
     const { user, loading } = useUser();
@@ -24,6 +25,7 @@ const Dashboard = () => {
             {(user.type === 'Student' || user.type === 'Employer') && <ProjectList variant="dashboard" />}
             {user.type === 'Admin' && <ShowcaseList />}
             {(!['Student', 'Employer', 'Admin'].includes(user.type)) && <div>Error...</div>}
+            <Footer />
         </>
     );
 };

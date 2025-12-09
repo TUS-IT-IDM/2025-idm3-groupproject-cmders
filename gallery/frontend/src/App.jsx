@@ -38,8 +38,6 @@ const App = () => {
                         <Route path="/project/:id/edit" element={<ProjectAdd />} />
                     </Routes>
                 </main>
-
-                <Footer />
             </div>
         </Router>
     );
