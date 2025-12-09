@@ -6,6 +6,7 @@ import {
     HatGraduationRegular, 
     PeopleTeamRegular 
 } from '@fluentui/react-icons';
+import Footer from "./Footer.jsx";
 
 const About = () => {
     return (
@@ -117,8 +118,8 @@ const About = () => {
                         </div>
                     </div>
                 </section>
-
             </div>
+            <Footer />
         </>
     );
 };

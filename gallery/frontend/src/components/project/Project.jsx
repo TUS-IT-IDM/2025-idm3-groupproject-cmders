@@ -6,6 +6,7 @@ import {DocumentRegular, DocumentPdfRegular, ImageRegular, MusicNote2Regular, Vi
 import {Menu, MenuItem, MenuList, MenuPopover, MenuTrigger, SplitButton} from "@fluentui/react-components";
 import {useUser} from "../../context/UserContext.jsx";
 import ShowcaseService from "../../service/ShowcaseService.jsx";
+import Footer from "../Footer.jsx";
 
 const Project = () => {
     const { user, loading } = useUser();
@@ -149,6 +150,7 @@ const Project = () => {
                     ))}
                 </div>
             </div>
+            <Footer />
         </>
     );
 };

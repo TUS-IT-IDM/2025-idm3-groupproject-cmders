@@ -6,6 +6,7 @@ import {
     MailRegular, 
     BuildingRegular 
 } from '@fluentui/react-icons';
+import Footer from "./Footer.jsx";
 
 const Contact = () => {
     const campuses = [
@@ -112,8 +113,8 @@ const Contact = () => {
                         ))}
                     </div>
                 </section>
-
             </div>
+            <Footer />
         </>
     );
 };

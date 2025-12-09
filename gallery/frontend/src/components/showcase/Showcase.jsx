@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import ShowcaseService from '../../service/ShowcaseService.jsx';
 import Navbar from "../Navbar.jsx";
 import ProjectCard from "../project/ProjectCard.jsx";
+import Footer from "../Footer.jsx";
 
 const Showcase = () => {
     const { id } = useParams();
@@ -64,6 +65,7 @@ const Showcase = () => {
                     ))}
                 </div>
             </div>
+            <Footer />
         </>
     );
 };
