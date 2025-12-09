@@ -25,7 +25,7 @@ const ProjectList = ({ variant = "all" }) => {
                 switch (user?.type) {
                         case 'Employer': {
                             if (user?.id) {
-                                const response = await UserService.getFavourites(user.id);
+                                const response = await UserService.getFavourites(user);
                                 const projects = response.data.map(fav => fav.project);
                                 setProjects(projects);
                             }
